@@ -1,0 +1,63 @@
+{
+    "name": "PacejetIntegration",
+    "fantasyName": "Pacejet Integration",
+    "vendor": "NSeComm",
+    "version": "1.0.3",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": "",
+        "SCS": ""
+    },
+    "description": "Pacejet integration for checkout process. Disable 'Will Call' Avalara taxes.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": [
+                "services/PacejetIntegration.Session.Service.ss"
+            ]
+        }
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/Main/Sass/_pacejetintegration_main.scss"
+        },
+        "files": [
+            "Modules/Main/Sass/_pacejetintegration_main.scss"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "checkout": "Modules/Main/JavaScript/NSeComm.PacejetIntegration.Main.js"
+        },
+        "application": {
+            "checkout": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.PacejetIntegration.Main.js",
+                    "Modules/Main/JavaScript/OrderWizard.Module.CleanShipMethod.js",
+                    "Modules/Main/JavaScript/PacejetIntegration.Session.Model.js"
+                ]
+            }
+        }
+    },
+    "ssp-libraries": {
+        "entry_point": "Modules/Main/SuiteScript/NSeComm.PacejetIntegration.Main.js",
+        "files": [
+            "Modules/Main/SuiteScript/NSeComm.PacejetIntegration.Main.js",
+            "Modules/Main/SuiteScript/PacejetIntegration.js",
+            "Modules/Main/SuiteScript/PacejetIntegration.Pacejet.js",
+            "Modules/Main/SuiteScript/PacejetIntegration.Helper.js",
+            "Modules/Main/SuiteScript/PacejetIntegration.Session.ServiceController.js"
+        ]
+    },
+    "local_folder": "Workspace/PacejetIntegration",
+    "suitescript2": {
+        "files": []
+    }
+}

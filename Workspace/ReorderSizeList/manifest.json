@@ -1,0 +1,41 @@
+{
+    "name": "ReorderSizeList",
+    "fantasyName": "Reorder Size List",
+    "vendor": "NSeComm",
+    "version": "1.0.1",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=23.2.0",
+        "SCS": ">=23.2.0"
+    },
+    "description": "Reorder Size List on PDP, Quick View and Cart Edit. Added support for Grid Order rows sorting",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": []
+        }
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/Main/JavaScript/NSeComm.ReorderSizeList.Main.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.ReorderSizeList.Main.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/ReorderSizeList",
+    "suitescript2": {
+        "files": []
+    }
+}

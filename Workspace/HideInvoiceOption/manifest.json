@@ -1,0 +1,46 @@
+{
+    "name": "HideInvoiceOption",
+    "fantasyName": "Hide Invoice",
+    "vendor": "NSeComm",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=23.2.0",
+        "SCS": ">=23.2.0"
+    },
+    "description": "Hide Invoice Option in checkout page depending on customer Terms.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": []
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/Main/Configuration/Main.json"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "checkout": "Modules/Main/JavaScript/NSeComm.HideInvoiceOption.Main.js"
+        },
+        "application": {
+            "checkout": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.HideInvoiceOption.Main.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/HideInvoiceOption",
+    "suitescript2": {
+        "files": []
+    }
+}

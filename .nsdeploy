@@ -1,0 +1,19 @@
+{
+    "credentials": {
+        "user_agent": "sc-extension-devtools/2025.1.0",
+        "authID": "45B49710-68DC-4DE8-BAC7-B50E1BE92054",
+        "hostname": "606473.restlets.api.netsuite.com",
+        "website": "3",
+        "domain": "www.verociousmotorsports.com",
+        "webapp_id": "2361879",
+        "ssp_folder": "2361879",
+        "is_scis": false,
+        "target_folder": {
+            "parentId": "-15",
+            "folderName": "Deploy_Extensions"
+        },
+        "key": "c00dc6941fdf4506f9711b76d701747ac1d65aa8e177a4dcf67ecde1d80cee20",
+        "secret": "cf565cea7e76b64649c279ad95e4001817be3483838b6700e5cd736ea5439ac5",
+        "account": "606473"
+    }
+}

@@ -1,0 +1,52 @@
+// QuantityUrlCleaner Extension
+// No styles needed — this extension only modifies the browser URL
+// This file is required by the manifest but intentionally empty
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'),
+       url('/site/img/fonts/OpenSans-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'),
+       url('/site/img/fonts/OpenSans-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'),
+       url('/site/img/fonts/OpenSans-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'),
+       url('/site/img/fonts/OpenSans-ExtraBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Droid Sans Regular'), local('DroidSans'),
+       url('/site/img/fonts/DroidSans.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Droid Sans Bold'), local('DroidSans-Bold'),
+       url('/site/img/fonts/DroidSans-Bold.woff2') format('woff2');
+}

@@ -1,0 +1,68 @@
+{
+    "name": "LiveChat",
+    "fantasyName": "Live Chat",
+    "vendor": "NSeComm",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=23.2.0",
+        "SCS": ">=23.2.0"
+    },
+    "description": "Slaask&#39;s live chat.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": []
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/Main/Configuration/Main.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/Main/Sass/_livechat-main.scss",
+            "myaccount": "Modules/Main/Sass/_livechat-main.scss",
+            "checkout": "Modules/Main/Sass/_livechat-main.scss"
+        },
+        "files": [
+            "Modules/Main/Sass/_livechat-main.scss"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/Main/JavaScript/NSeComm.LiveChat.Main.js",
+            "myaccount": "Modules/Main/JavaScript/NSeComm.LiveChat.Main.js",
+            "checkout": "Modules/Main/JavaScript/NSeComm.LiveChat.Main.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.LiveChat.Main.js"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.LiveChat.Main.js"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.LiveChat.Main.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/LiveChat",
+    "suitescript2": {
+        "files": []
+    }
+}

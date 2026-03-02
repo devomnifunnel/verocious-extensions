@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "subtab": {
+        "id": "hideInvoice",
+        "title": "Terms",
+        "description": "",
+        "group": "extensions"
+      },
+      "properties": {
+        "hideInvoice.terms": {
+            "group": "extensions",
+            "subtab": "hideInvoice",
+            "type": "array",
+            "title": "Terms for which Invoice payment option will be hidden on checkout page.",
+            "description": "Select the Terms for which Invoice option will be hidden.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "term": {
+                        "title": "Term",
+                        "type": "string",
+                        "source": "term"
+                    }
+                }
+            }
+        }
+    }
+}

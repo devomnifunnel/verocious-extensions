@@ -1,0 +1,46 @@
+{
+    "name": "CustomPageTitleSuffix",
+    "fantasyName": "Custom Page Title Suffix",
+    "vendor": "NSeComm",
+    "version": "1.1.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": "23.2.1",
+        "SCS": "23.2.1"
+    },
+    "description": "Appends a user defined suffix in SuiteCommerce page titles for SEO etc.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": []
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/Main/Configuration/CustomPageTitleSuffix.json"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/Main/JavaScript/NSeComm.CustomPageTitleSuffix.Main.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.CustomPageTitleSuffix.Main.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/CustomPageTitleSuffix",
+    "suitescript2": {
+        "files": []
+    }
+}

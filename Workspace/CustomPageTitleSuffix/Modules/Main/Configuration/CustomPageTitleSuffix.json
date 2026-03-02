@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "subtab": {
+        "id": "customPageTitleSuffix",
+        "title": "Custom Page Title Suffix",
+        "group": "extensions"
+    },
+    "properties": {
+        "extensions.pagetitlesuffix.suffix": {
+            "group": "extensions",
+            "subtab": "customPageTitleSuffix",
+            "type": "string",
+            "title": "Page Title Suffix",
+            "description": "Appends a user defined suffix in SuiteCommerce page titles for SEO etc",
+            "default": ""
+        },
+        "extensions.pagetitlesuffix.pagetypes": {
+            "group": "extensions",
+            "subtab": "customPageTitleSuffix",
+            "type": "boolean",
+            "title": "Include Landing Pages",
+            "description": "Include suffix on landing pages",
+            "default": true
+        }
+    }
+}

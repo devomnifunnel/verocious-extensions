@@ -1,0 +1,63 @@
+{
+    "name": "ReCaptcha",
+    "fantasyName": "ReCaptcha",
+    "vendor": "BluePoint",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": "",
+        "SCS": ""
+    },
+    "description": "ReCaptcha on website.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": []
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/ReCaptcha/Configuration/ReCaptcha.json"
+        ]
+    },
+    "templates": {
+        "application": {
+            "checkout": {
+                "files": [
+                    "Modules/ReCaptcha/Templates/bp_recaptcha_recaptcha_login.tpl",
+                    "Modules/ReCaptcha/Templates/bp_recaptcha_recaptcha_register.tpl",
+                    "Modules/ReCaptcha/Templates/bp_recaptcha_recaptcha_checkout.tpl"
+                ]
+            }
+        }
+    },
+    "javascript": {
+        "entry_points": {
+            "checkout": "Modules/ReCaptcha/JavaScript/BluePoint.ReCaptcha.ReCaptcha.js"
+        },
+        "application": {
+            "checkout": {
+                "files": [
+                    "Modules/ReCaptcha/JavaScript/BluePoint.ReCaptcha.ReCaptcha.js",
+                    "Modules/ReCaptcha/JavaScript/BluePoint.ReCaptcha.ReCaptcha.SS2Model.js",
+                    "Modules/ReCaptcha/JavaScript/Recaptcha.Login.View.js",
+                    "Modules/ReCaptcha/JavaScript/Recaptcha.Register.View.js",
+                    "Modules/ReCaptcha/JavaScript/Recaptcha.Checkout.View.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/ReCaptcha",
+    "suitescript2": {
+        "files": [
+            "Modules/ReCaptcha/SuiteScript2/ReCaptcha.Service.ss"
+        ]
+    }
+}

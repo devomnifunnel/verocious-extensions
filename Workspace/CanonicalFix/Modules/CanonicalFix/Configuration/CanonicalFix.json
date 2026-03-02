@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": { 
+        "CanonicalFix.config": {
+            "group": "extensions",
+            "subtab": "CanonicalFix_subtab",
+            "type": "string",
+            "title": "CanonicalFix_Title",
+            "description": "Config description example",
+            "default": "Default config example"
+        }
+    }
+}

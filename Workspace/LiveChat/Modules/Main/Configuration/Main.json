@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "subtab": {
+        "id": "LiveChat",
+        "group": "extensions",
+        "title": "Live Chat"
+    },
+    "properties": {
+        "liveChat.slaaskKey": {
+            "group": "extensions",
+            "subtab": "liveChat",
+            "type": "string",
+            "title": "Slaask Key",
+            "description": "Slaask key.",
+            "default": "38392f3e94d1b1aa98db1403f3d45026"
+        },
+        "liveChat.slaaskUrl": {
+            "group": "extensions",
+            "subtab": "liveChat",
+            "type": "string",
+            "title": "Slaask Script URL",
+            "description": "Slaask script URL.",
+            "default": "https://cdn.slaask.com/chat_loader.js"
+        }
+    }
+}

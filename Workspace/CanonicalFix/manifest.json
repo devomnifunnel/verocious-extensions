@@ -1,0 +1,108 @@
+{
+    "name": "CanonicalFix",
+    "fantasyName": "Beautiful Canonical URLs for SEO by OmniFunnelMarketing",
+    "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=25.1.0",
+        "SCS": ">=25.1.0"
+    },
+    "description": "This extension will fix the canonical URLs by removing ?page=1 default param. Note: It will not remove the ?page=2",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": [
+                "services/CanonicalFix.Service.ss"
+            ]
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/CanonicalFix/Configuration/CanonicalFix.json",
+            "Modules/CanonicalFix/ns.package.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/CanonicalFix/Sass/_canonicalfix-canonicalfix.scss",
+            "myaccount": "Modules/CanonicalFix/Sass/_canonicalfix-canonicalfix.scss",
+            "checkout": "Modules/CanonicalFix/Sass/_canonicalfix-canonicalfix.scss"
+        },
+        "files": [
+            "Modules/CanonicalFix/Sass/_canonicalfix-canonicalfix.scss"
+        ]
+    },
+    "templates": {
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/CanonicalFix/Templates/default_canonicalfix_canonicalfix.tpl"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/CanonicalFix/Templates/default_canonicalfix_canonicalfix.tpl"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/CanonicalFix/Templates/default_canonicalfix_canonicalfix.tpl"
+                ]
+            }
+        }
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.js",
+            "myaccount": "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.js",
+            "checkout": "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.js",
+                    "Modules/CanonicalFix/JavaScript/CanonicalFix.View.js",
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.Model.js",
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.SS2Model.js"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.js",
+                    "Modules/CanonicalFix/JavaScript/CanonicalFix.View.js",
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.Model.js",
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.SS2Model.js"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.js",
+                    "Modules/CanonicalFix/JavaScript/CanonicalFix.View.js",
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.Model.js",
+                    "Modules/CanonicalFix/JavaScript/default.CanonicalFix.CanonicalFix.SS2Model.js"
+                ]
+            }
+        }
+    },
+    "ssp-libraries": {
+        "entry_point": "Modules/CanonicalFix/SuiteScript/default.CanonicalFix.CanonicalFix.js",
+        "files": [
+            "Modules/CanonicalFix/SuiteScript/default.CanonicalFix.CanonicalFix.js",
+            "Modules/CanonicalFix/SuiteScript/CanonicalFix.ServiceController.js"
+        ]
+    },
+    "local_folder": "Workspace/CanonicalFix",
+    "suitescript2": {
+        "files": [
+            "Modules/CanonicalFix/SuiteScript2/CanonicalFix.Service.ss"
+        ]
+    }
+}

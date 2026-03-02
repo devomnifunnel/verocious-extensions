@@ -1,0 +1,93 @@
+{
+    "name": "QuantityUrlCleaner",
+    "fantasyName": "Quantity URL Cleaner for SEO by OmniFunnelMarketing",
+    "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=25.1.0",
+        "SCS": ">=25.1.0"
+    },
+    "description": "Removes the quantity parameter from the browser URL on product detail pages using history.replaceState(). Prevents Google from indexing quantity-variant duplicate URLs. Preserves all other URL parameters including variant selectors.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/QuantityUrlCleaner/Configuration/QuantityUrlCleaner.json",
+            "Modules/ns.package.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/QuantityUrlCleaner/Sass/_quantityurlcleaner-quantityurlcleaner.scss",
+            "myaccount": "Modules/QuantityUrlCleaner/Sass/_quantityurlcleaner-quantityurlcleaner.scss",
+            "checkout": "Modules/QuantityUrlCleaner/Sass/_quantityurlcleaner-quantityurlcleaner.scss"
+        },
+        "files": [
+            "Modules/QuantityUrlCleaner/Sass/_quantityurlcleaner-quantityurlcleaner.scss"
+        ]
+    },
+    "templates": {
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/QuantityUrlCleaner/Templates/default_quantityurlcleaner_quantityurlcleaner.tpl"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/QuantityUrlCleaner/Templates/default_quantityurlcleaner_quantityurlcleaner.tpl"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/QuantityUrlCleaner/Templates/default_quantityurlcleaner_quantityurlcleaner.tpl"
+                ]
+            }
+        }
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.js",
+            "myaccount": "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.js",
+            "checkout": "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.js",
+                    "Modules/QuantityUrlCleaner/JavaScript/QuantityUrlCleaner.View.js",
+                    "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model.js"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.js",
+                    "Modules/QuantityUrlCleaner/JavaScript/QuantityUrlCleaner.View.js",
+                    "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model.js"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.js",
+                    "Modules/QuantityUrlCleaner/JavaScript/QuantityUrlCleaner.View.js",
+                    "Modules/QuantityUrlCleaner/JavaScript/default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/QuantityUrlCleaner",
+    "suitescript2": {
+        "files": [
+            "Modules/QuantityUrlCleaner/SuiteScript2/QuantityUrlCleaner.Service.ss"
+        ]
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "name": "Klaviyo",
+    "fantasyName": "Klaviyo",
+    "vendor": "NSeComm",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=23.2.0",
+        "SCS": ">=23.2.0"
+    },
+    "description": "Klaviyo integration.",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": []
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/Main/Configuration/Main.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "myaccount": "Modules/Main/Sass/_klaviyo-main.scss",
+            "checkout": "Modules/Main/Sass/_klaviyo-main.scss",
+            "shopping": "Modules/Main/Sass/_klaviyo-main.scss"
+        },
+        "files": [
+            "Modules/Main/Sass/_klaviyo-main.scss"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/Main/JavaScript/NSeComm.Klaviyo.Main.js",
+            "myaccount": "Modules/Main/JavaScript/NSeComm.Klaviyo.Main.js",
+            "checkout": "Modules/Main/JavaScript/NSeComm.Klaviyo.Main.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.Klaviyo.Main.js"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.Klaviyo.Main.js"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/Main/JavaScript/NSeComm.Klaviyo.Main.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/Klaviyo",
+    "suitescript2": {
+        "files": []
+    }
+}

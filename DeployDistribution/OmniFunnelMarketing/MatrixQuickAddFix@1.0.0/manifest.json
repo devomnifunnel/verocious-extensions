@@ -1,0 +1,104 @@
+{
+    "name": "MatrixQuickAddFix",
+    "fantasyName": "MatrixQuickAddFix",
+    "vendor": "OmniFunnelMarketing",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=25.1.0",
+        "SCS": ">=25.1.0"
+    },
+    "version": "1.0.0",
+    "description": "Hides Add to Cart button for matrix parent items on PLP to prevent server errors.",
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": [
+                "services/MatrixQuickAddFix.Service.ss"
+            ]
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/MatrixQuickAddFix/Configuration/MatrixQuickAddFix.json",
+            "Modules/MatrixQuickAddFix/ns.package.json"
+        ]
+    },
+    "templates": {
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/MatrixQuickAddFix/Templates/omnifunnelmarketing_matrixquickaddfix_matrixquickaddfix.tpl"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/MatrixQuickAddFix/Templates/omnifunnelmarketing_matrixquickaddfix_matrixquickaddfix.tpl"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/MatrixQuickAddFix/Templates/omnifunnelmarketing_matrixquickaddfix_matrixquickaddfix.tpl"
+                ]
+            }
+        }
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss",
+            "myaccount": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss",
+            "checkout": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss"
+        },
+        "files": [
+            "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js",
+            "myaccount": "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js",
+            "checkout": "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/MatrixQuickAddFix.View.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model.js"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/MatrixQuickAddFix.View.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model.js"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/MatrixQuickAddFix.View.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model.js",
+                    "Modules/MatrixQuickAddFix/JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model.js"
+                ]
+            }
+        }
+    },
+    "ssp-libraries": {
+        "entry_point": "Modules/MatrixQuickAddFix/SuiteScript/MatrixQuickAddFix.ServiceController.js",
+        "files": [
+            "Modules/MatrixQuickAddFix/SuiteScript/MatrixQuickAddFix.ServiceController.js",
+            "Modules/MatrixQuickAddFix/SuiteScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js"
+        ]
+    },
+    "suitescript2": {
+        "files": []
+    }
+}

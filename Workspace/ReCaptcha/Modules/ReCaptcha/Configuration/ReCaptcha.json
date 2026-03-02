@@ -1,0 +1,49 @@
+{
+    "type": "object",
+    "subtab": {
+        "id": "recaptcha",
+        "group": "extensions",
+        "title": "Google Captcha",
+        "description": "Google Captcha"
+    },
+    "properties":{
+        "recaptcha.isactive": {
+            "group": "extensions",
+            "subtab": "recaptcha",
+            "type": "boolean",
+            "title": "Google Captcha",
+            "description": "Google Captcha",
+            "default": "false"
+        },
+        "recaptcha.isverocious": {
+            "group": "extensions",
+            "subtab": "recaptcha",
+            "type": "boolean",
+            "title": "Verocious Website",
+            "description": "Enable this only for verocious website to correct key configuration.",
+            "default": "false"
+        },
+        "recaptcha.keylist": {
+            "group": "extensions",
+            "subtab": "recaptcha",
+            "type": "array",
+            "title": "Google Captcha Info for Website",
+            "description": "Google Captcha Info for Website",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "sitekey": {
+                        "type": "string",
+                        "title": "Site Key",
+                        "description": "Site Key"
+                    },
+                    "secretkey": {
+                        "type": "string",
+                        "title": "Secret Key",
+                        "description": "Secret Key"
+                    }
+                }
+            }          
+        }
+    }
+}

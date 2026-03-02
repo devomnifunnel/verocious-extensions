@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "subtab": {
+        "id": "klaviyo",
+        "group": "extensions",
+        "title": "Klaviyo"
+    },
+    "properties": {
+        "klaviyo.url": {
+            "group": "extensions",
+            "subtab": "klaviyo",
+            "type": "string",
+            "title": "Klaviyo URL",
+            "description": "Klaviyo URL with company_id attribute.",
+            "default": "https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=Wwzs6N"
+        },
+        "klaviyo.customerCategory": {
+            "group": "extensions",
+            "subtab": "klaviyo",
+            "type": "string",
+            "title": "Sign Up Customer Category",
+            "description": "Customer category name that will be sent when subscribing to the newsletter.",
+            "default": ""
+        }
+    }
+}
