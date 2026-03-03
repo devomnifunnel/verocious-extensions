@@ -1,7 +1,7 @@
 // Model.js
 // -----------------------
 // @module Case
-define("OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model", ["Backbone", "Utils"], function(
+define("OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.Model", ["Backbone", "Utils"], function(
     Backbone,
     Utils
 ) {
@@ -14,7 +14,7 @@ define("OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAusteni
         //@property {String} urlRoot
         urlRoot: Utils.getAbsoluteUrl(
             getExtensionAssetsPath(
-                "services/MatrixQuickAddFixAustenitex.Service.ss"
+                "services/CookieConsentCLSFix.Service.ss"
             )
         )
         

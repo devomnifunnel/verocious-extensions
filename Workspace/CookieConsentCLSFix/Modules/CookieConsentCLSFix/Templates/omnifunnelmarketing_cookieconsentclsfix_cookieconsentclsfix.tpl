@@ -1,5 +1,5 @@
-<section class="matrixquickaddfixaustenitex-info-card">
-    <span class="matrixquickaddfixaustenitex-info-card-content">
+<section class="cookieconsentclsfix-info-card">
+    <span class="cookieconsentclsfix-info-card-content">
       {{message}}
     </span>
 </section>

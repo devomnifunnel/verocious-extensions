@@ -1,0 +1,75 @@
+{
+    "name": "CookieConsentCLSFix",
+    "fantasyName": "CookieConsentCLSFix",
+    "vendor": "OmniFunnelMarketing",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=25.1.0",
+        "SCS": ">=25.1.0"
+    },
+    "version": "1.0.0",
+    "description": "Fixes CLS (Cumulative Layout Shift) caused by CookieConsent overlay positioning",
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": [
+                "services/CookieConsentCLSFix.Service.ss"
+            ]
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/CookieConsentCLSFix/Configuration/CookieConsentCLSFix.json"
+        ]
+    },
+    "templates": {
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/CookieConsentCLSFix/Templates/omnifunnelmarketing_cookieconsentclsfix_cookieconsentclsfix.tpl"
+                ]
+            }
+        }
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/CookieConsentCLSFix/Sass/_cookieconsentclsfix-cookieconsentclsfix.scss"
+        },
+        "files": [
+            "Modules/CookieConsentCLSFix/Sass/_cookieconsentclsfix-cookieconsentclsfix.scss"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/CookieConsentCLSFix/JavaScript/OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/CookieConsentCLSFix/JavaScript/OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.js",
+                    "Modules/CookieConsentCLSFix/JavaScript/CookieConsentCLSFix.View.js",
+                    "Modules/CookieConsentCLSFix/JavaScript/OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.Model.js",
+                    "Modules/CookieConsentCLSFix/JavaScript/OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.SS2Model.js"
+                ]
+            }
+        }
+    },
+    "ssp-libraries": {
+        "entry_point": "Modules/CookieConsentCLSFix/SuiteScript/OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.js",
+        "files": [
+            "Modules/CookieConsentCLSFix/SuiteScript/OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.js",
+            "Modules/CookieConsentCLSFix/SuiteScript/CookieConsentCLSFix.ServiceController.js"
+        ]
+    },
+    "suitescript2": {
+        "files": [
+            "Modules/CookieConsentCLSFix/SuiteScript2/CookieConsentCLSFix.Service.ss"
+        ]
+    }
+}

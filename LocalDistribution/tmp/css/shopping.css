@@ -9246,7 +9246,7 @@ html .bx-pager-item img {
 }
 
 /* Edited for Summit Theme */
-.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .canonicalfix-info-card {
+.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .cookieconsentclsfix-info-card, .canonicalfix-info-card {
   background: white;
   border: none;
   padding: 15px;
@@ -9270,7 +9270,7 @@ html .bx-pager-item img {
   border-style: dashed;
 }
 
-.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .canonicalfix-info-card-content {
+.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .cookieconsentclsfix-info-card-content, .canonicalfix-info-card-content {
   margin: 5px 0;
 }
 
@@ -20782,6 +20782,44 @@ Default merchandising template styling merchzone_default.txt
 .canonicalfix-info-card-content {
   color: #4f88b0;
   font-weight: bold;
+}
+
+/*
+	Sass Application Entry Point
+	Link all your sass dependencies in the right order
+
+	Example:
+	@import "other-sass-file.scss";
+	@import "../../<other module>/Sass/other-sass-file.scss";
+*/
+.cookieconsentclsfix-info-card-content {
+  color: #4f88b0;
+  font-weight: bold;
+}
+
+/* CLS Fix: CookieConsent Overlay - prevents layout shift on page load */
+/* Ticket: CLS Fix (03/03/26) */
+[data-view=cookieConsent-overlay] {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 10000 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+[data-view=cookieConsent-overlay] > * {
+  pointer-events: auto;
+}
+
+#cookieConsentBackdrop {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
 }
 
 .needsclick.kl-teaser-UnVkce.kl-private-reset-css-Xuajs1 {
