@@ -1,7 +1,10 @@
 {
     "gulp": {
         "javascript": [
-            "JavaScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js"
+            "JavaScript/*.js"
+        ],
+        "sass": [
+            "Sass/**/*.scss"
         ]
     }
 }

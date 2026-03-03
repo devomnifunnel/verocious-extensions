@@ -16,3 +16,30 @@
     color: $sc-color-secondary;
     font-weight: bold;
 }
+// "Choose Options" button for matrix parent items on PLP
+// Matches the existing Add to Cart button styling but uses a distinct color
+// to visually differentiate "this goes to PDP" from "this adds to cart directly"
+.matrix-choose-options-button {
+    // Inherit all base styles from the existing .cart-add-to-cart-button-button class
+    // (which is already applied via the shared class name)
+    // Override the background color to differentiate from Add to Cart
+    background-color: #7dff01 !important;
+    border-color: #7dff01 !important;
+    color: #000000 !important;
+    // Ensure it looks like a button even though it's an <a> tag
+    text-decoration: none !important;
+    &:hover {
+            background-color: #000000 !important;
+			border-color: #000000 !important;
+			color: #fff !important;
+			text-decoration: none !important;
+    }
+    &:focus,
+    &:active {
+        background-color: #000000 !important;
+		border-color: #000000 !important;
+		color: #fff !important;
+		text-decoration: none !important;
+        outline: none;
+    }
+}
