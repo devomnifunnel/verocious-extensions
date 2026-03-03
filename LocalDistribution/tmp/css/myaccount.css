@@ -13385,7 +13385,7 @@ html .bx-pager-item img {
 }
 
 /* Edited for Summit Theme */
-.info-card, .matrixquickaddfix-info-card, .canonicalfix-info-card, .subscriptions-line, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review, .paymentinstrument-ach-list .paymentinstrument-ach-content,
+.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .canonicalfix-info-card, .subscriptions-line, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review, .paymentinstrument-ach-list .paymentinstrument-ach-content,
 .paymentinstrument-ach-module-list-placeholder .paymentinstrument-ach-content, .invoice-details-info-card, .customer-payment-details-accordion-body-container-payment-memo-card,
 .customer-payment-details-accordion-body-container-payment-memo-card-info,
 .customer-payment-details-accordion-body-container-payment-method-card, .order-wizard-showshipments-module-shipping-details-method-info-card, .order-wizard-showshipments-actionable-module-shipping-details-method-info-card, .order-wizard-msr-shipmethod-package-item-count-label, .order-wizard-msr-shipmethod-package-address-detail,
@@ -13416,7 +13416,7 @@ html .bx-pager-item img {
   border-style: dashed;
 }
 
-.info-card-content, .matrixquickaddfix-info-card-content, .canonicalfix-info-card-content, .subscriptions-line .subscriptions-line-info-card-content, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data p, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data .push-button-secondary span, .push-button-secondary .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data span, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data .push-button-description span, .push-button-description .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data span, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data .product-details-information-pusher span, .product-details-information-pusher .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data span, .receipt-details-info-card-info-content, .receipt-details-info-card-info .address-details-address-title, .order-history-details-info-card-info-content, .order-history-details-info-card-info .address-details-address-title {
+.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .canonicalfix-info-card-content, .subscriptions-line .subscriptions-line-info-card-content, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data p, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data .push-button-secondary span, .push-button-secondary .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data span, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data .push-button-description span, .push-button-description .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data span, .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data .product-details-information-pusher span, .product-details-information-pusher .subscriptions-addon-review .subscriptions-addon-review-container .subscriptions-addon-review-left .subscriptions-addon-review-review .subscriptions-addon-review-review .subscriptions-addon-review-review-data span, .receipt-details-info-card-info-content, .receipt-details-info-card-info .address-details-address-title, .order-history-details-info-card-info-content, .order-history-details-info-card-info .address-details-address-title {
   margin: 5px 0;
 }
 
@@ -29893,6 +29893,40 @@ Default merchandising template styling merchzone_default.txt
 .matrix-choose-options-button:focus, .matrix-choose-options-button:active {
   background-color: #000000 !important;
   border-color: #000000 !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  outline: none;
+}
+
+/*
+	Sass Application Entry Point
+	Link all your sass dependencies in the right order
+
+	Example:
+	@import "other-sass-file.scss";
+	@import "../../<other module>/Sass/other-sass-file.scss";
+*/
+.matrixquickaddfixaustenitex-info-card-content {
+  color: #4f88b0;
+  font-weight: bold;
+}
+
+.matrix-choose-options-button {
+  background-color: #00aeef !important;
+  border-color: #00aeef !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-family: Droid Sans !important;
+}
+.matrix-choose-options-button:hover, .open .matrix-choose-options-button.split-button-toggle, .open .matrix-choose-options-button.sc-flyout-control, .open .matrix-choose-options-button.order-history-list-tracking-number-control-button {
+  background-color: #005abb !important;
+  border-color: #005abb !important;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+.matrix-choose-options-button:focus, .matrix-choose-options-button:active {
+  background-color: #005abb !important;
+  border-color: #005abb !important;
   color: #fff !important;
   text-decoration: none !important;
   outline: none;

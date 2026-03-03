@@ -5,6 +5,11 @@
         "shopping",
         "myaccount",
         "checkout"
+      ],
+      "MatrixQuickAddFixAustenitex": [
+        "shopping",
+        "myaccount",
+        "checkout"
       ]
     }
   }
