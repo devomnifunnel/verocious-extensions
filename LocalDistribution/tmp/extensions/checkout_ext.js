@@ -764,6 +764,192 @@ define('OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix', [
 
 };
 
+extensions['OmniFunnelMarketing.MatrixQuickAddFixAustenitex.1.0.0'] = function(){
+
+function getExtensionAssetsPath(asset){
+	return 'extensions/OmniFunnelMarketing/MatrixQuickAddFixAustenitex/1.0.0/' + asset;
+}
+
+// @module OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex
+define('OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View'
+,	[
+	'omnifunnelmarketing_matrixquickaddfixaustenitex_matrixquickaddfixaustenitex.tpl'
+	
+	,	'OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model'
+	
+	,	'Backbone'
+    ]
+, function (
+	omnifunnelmarketing_matrixquickaddfixaustenitex_matrixquickaddfixaustenitex_tpl
+	
+	,	MatrixQuickAddFixAustenitexSS2Model
+	
+	,	Backbone
+)
+{
+    'use strict';
+
+	// @class OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View @extends Backbone.View
+	return Backbone.View.extend({
+
+		template: omnifunnelmarketing_matrixquickaddfixaustenitex_matrixquickaddfixaustenitex_tpl
+
+	,	initialize: function (options) {
+
+			/*  Uncomment to test backend communication with an example service
+				(you'll need to deploy and activate the extension first)
+			*/
+
+			// this.model = new MatrixQuickAddFixAustenitexModel();
+			// var self = this;
+         	// this.model.fetch().done(function(result) {
+			// 	self.message = result.message;
+			// 	self.render();
+      		// });
+		}
+
+	,	events: {
+		}
+
+	,	bindings: {
+		}
+
+	, 	childViews: {
+
+		}
+
+		//@method getContext @return OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View.Context
+	,	getContext: function getContext()
+		{
+			//@class OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View.Context
+			this.message = this.message || 'Hello World!!'
+			return {
+				message: this.message
+			};
+		}
+	});
+});
+
+
+// Model.js
+// -----------------------
+// @module Case
+define("OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model", ["Backbone", "Utils"], function(
+    Backbone,
+    Utils
+) {
+    "use strict";
+
+    // @class Case.Fields.Model @extends Backbone.Model
+    return Backbone.Model.extend({
+
+        
+        //@property {String} urlRoot
+        urlRoot: Utils.getAbsoluteUrl(
+            getExtensionAssetsPath(
+                "services/MatrixQuickAddFixAustenitex.Service.ss"
+            )
+        )
+        
+});
+});
+
+
+// Model.js
+// -----------------------
+// @module Case
+define("OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model", ["Backbone", "Utils"], function(
+    Backbone,
+    Utils
+) {
+    "use strict";
+
+    // @class Case.Fields.Model @extends Backbone.Model
+    return Backbone.Model.extend({
+        //@property {String} urlRoot
+        urlRoot: Utils.getAbsoluteUrl(
+            getExtensionAssetsPath(
+                "Modules/MatrixQuickAddFixAustenitex/SuiteScript2/MatrixQuickAddFixAustenitex.Service.ss"
+            ),
+            true
+        )
+});
+});
+
+
+define('OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex', [
+    'Cart.QuickAddToCart.View',
+    'jQuery'
+], function (CartQuickAddToCartView, jQuery) {
+    'use strict';
+    return {
+        mountToApp: function mountToApp() {
+            // Store reference to the original initialize method
+            var originalInitialize = CartQuickAddToCartView.prototype.initialize;
+            // Override initialize to add matrix parent detection
+            CartQuickAddToCartView.prototype.initialize = function () {
+                // Call the original initialize first — this sets this.showQuickAddToCartButton
+                originalInitialize.apply(this, arguments);
+                // After original logic, check if the item is a matrix parent
+                // If so, flag it as a matrix item (but do NOT hide the button area)
+                try {
+                    var item = this.model.getItem();
+                    var matrixPriceRange = item.get('onlinematrixpricerange');
+                    if (matrixPriceRange && matrixPriceRange.length > 0) {
+                        // This is a matrix parent item
+                        this.isMatrixParent = true;
+                        this.matrixItemUrl = item.get('_url') || '';
+                        // IMPORTANT: Force the button area to show (undo the hide)
+                        // We WANT the button area rendered so we can replace its content
+                        this.showQuickAddToCartButton = true;
+                    } else {
+                        this.isMatrixParent = false;
+                    }
+                } catch (e) {
+                    console.warn('MatrixQuickAddFix: Error in initialize', e);
+                    this.isMatrixParent = false;
+                }
+            };
+            // Store reference to the original render method
+            var originalRender = CartQuickAddToCartView.prototype.render;
+            // Override render to swap the button after the template renders
+            CartQuickAddToCartView.prototype.render = function () {
+                // Call the original render first — this renders the full Add to Cart template
+                originalRender.apply(this, arguments);
+                // If this is a matrix parent, replace the Add to Cart button + quantity
+                // with a "Choose Options" link button pointing to the PDP
+                if (this.isMatrixParent && this.matrixItemUrl) {
+                    try {
+                        var $addToCartContainer = this.$('[data-view="AddToCart"]');
+                        if ($addToCartContainer.length) {
+                            // Replace the entire AddToCart child view content with a Choose Options link
+                            $addToCartContainer.html(
+                                '<div class="cart-add-to-cart-button-container">' +
+                                    '<div class="cart-add-to-cart-button">' +
+                                        '<a href="' + this.matrixItemUrl + '" ' +
+                                           'class="cart-add-to-cart-button-button matrix-choose-options-button" ' +
+                                           'data-touchpoint="home" ' +
+                                           'data-hashtag="' + this.matrixItemUrl + '">' +
+                                            'Choose Options' +
+                                        '</a>' +
+                                    '</div>' +
+                                '</div>'
+                            );
+                        }
+                        // Also hide the quantity input — it's not relevant for "Choose Options"
+                        this.$('[data-type="cart-quickaddtocart-quantity"]').closest('.cart-quickaddtocart-quantity-wrapper, .cart-quickaddtocart-quantity').hide();
+                    } catch (e) {
+                        console.warn('MatrixQuickAddFix: Error in render override', e);
+                    }
+                }
+                return this;
+            };
+        }
+    };
+});
+
+};
+
 extensions['NSeComm.PacejetIntegration.1.0.3'] = function(){
 
 function getExtensionAssetsPath(asset){
@@ -1516,7 +1702,7 @@ define('BluePoint.ReCaptcha.ReCaptcha'
 
 };
 
-SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OrderWizard.Module.CleanShipMethod","PacejetIntegration.Session.Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model","BluePoint.ReCaptcha.ReCaptcha.SS2Model","BluePoint.ReCaptcha.ReCaptcha.Login.View","BluePoint.ReCaptcha.Recaptcha.Register.View","BluePoint.ReCaptcha.ReCaptcha.Checkout.View"];
+SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","OrderWizard.Module.CleanShipMethod","PacejetIntegration.Session.Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model","BluePoint.ReCaptcha.ReCaptcha.SS2Model","BluePoint.ReCaptcha.ReCaptcha.Login.View","BluePoint.ReCaptcha.Recaptcha.Register.View","BluePoint.ReCaptcha.ReCaptcha.Checkout.View"];
 try{
 	extensions['OmniFunnelMarketing.CanonicalFix.1.0.0']();
 	SC.addExtensionModule('default.CanonicalFix.CanonicalFix');
@@ -1560,6 +1746,16 @@ catch(error)
 try{
 	extensions['OmniFunnelMarketing.MatrixQuickAddFix.1.0.0']();
 	SC.addExtensionModule('OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix');
+}
+catch(error)
+{
+	console.error(error);
+}
+
+
+try{
+	extensions['OmniFunnelMarketing.MatrixQuickAddFixAustenitex.1.0.0']();
+	SC.addExtensionModule('OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex');
 }
 catch(error)
 {

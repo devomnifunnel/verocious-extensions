@@ -2,14 +2,15 @@
     "name": "MatrixQuickAddFix",
     "fantasyName": "MatrixQuickAddFix",
     "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
     "type": "extension",
     "target": "SCA,SCS",
     "target_version": {
         "SCA": ">=25.1.0",
         "SCS": ">=25.1.0"
     },
-    "version": "1.0.0",
     "description": "Hides Add to Cart button for matrix parent items on PLP to prevent server errors.",
+    "skins": [],
     "assets": {
         "img": {
             "files": []
@@ -27,6 +28,16 @@
         "files": [
             "Modules/MatrixQuickAddFix/Configuration/MatrixQuickAddFix.json",
             "Modules/MatrixQuickAddFix/ns.package.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss",
+            "myaccount": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss",
+            "checkout": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss"
+        },
+        "files": [
+            "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss"
         ]
     },
     "templates": {
@@ -47,16 +58,6 @@
                 ]
             }
         }
-    },
-    "sass": {
-        "entry_points": {
-            "shopping": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss",
-            "myaccount": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss",
-            "checkout": "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss"
-        },
-        "files": [
-            "Modules/MatrixQuickAddFix/Sass/_matrixquickaddfix-matrixquickaddfix.scss"
-        ]
     },
     "javascript": {
         "entry_points": {
@@ -98,6 +99,7 @@
             "Modules/MatrixQuickAddFix/SuiteScript/OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.js"
         ]
     },
+    "local_folder": "Workspace/MatrixQuickAddFix",
     "suitescript2": {
         "files": []
     }

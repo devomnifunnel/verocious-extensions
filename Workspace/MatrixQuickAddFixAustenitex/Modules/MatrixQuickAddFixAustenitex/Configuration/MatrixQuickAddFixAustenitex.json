@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": { 
+        "MatrixQuickAddFixAustenitex.config": {
+            "group": "extensions",
+            "subtab": "MatrixQuickAddFixAustenitex_subtab",
+            "type": "string",
+            "title": "MatrixQuickAddFixAustenitex_Title",
+            "description": "Config description example",
+            "default": "Default config example"
+        }
+    }
+}
