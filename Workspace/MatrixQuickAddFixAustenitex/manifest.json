@@ -2,14 +2,15 @@
     "name": "MatrixQuickAddFixAustenitex",
     "fantasyName": "MatrixQuickAddFixAustenitex",
     "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
     "type": "extension",
     "target": "SCA,SCS",
     "target_version": {
         "SCA": ">=25.1.0",
         "SCS": ">=25.1.0"
     },
-    "version": "1.0.0",
     "description": "Hides Add to Cart button for matrix parent items on PLP to prevent server errors.",
+    "skins": [],
     "assets": {
         "img": {
             "files": []
@@ -26,6 +27,16 @@
     "configuration": {
         "files": [
             "Modules/MatrixQuickAddFixAustenitex/Configuration/MatrixQuickAddFixAustenitex.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss",
+            "myaccount": "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss",
+            "checkout": "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss"
+        },
+        "files": [
+            "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss"
         ]
     },
     "templates": {
@@ -46,16 +57,6 @@
                 ]
             }
         }
-    },
-    "sass": {
-        "entry_points": {
-            "shopping": "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss",
-            "myaccount": "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss",
-            "checkout": "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss"
-        },
-        "files": [
-            "Modules/MatrixQuickAddFixAustenitex/Sass/_matrixquickaddfixaustenitex-matrixquickaddfixaustenitex.scss"
-        ]
     },
     "javascript": {
         "entry_points": {
@@ -97,6 +98,7 @@
             "Modules/MatrixQuickAddFixAustenitex/SuiteScript/MatrixQuickAddFixAustenitex.ServiceController.js"
         ]
     },
+    "local_folder": "Workspace/MatrixQuickAddFixAustenitex",
     "suitescript2": {
         "files": [
             "Modules/MatrixQuickAddFixAustenitex/SuiteScript2/MatrixQuickAddFixAustenitex.Service.ss"

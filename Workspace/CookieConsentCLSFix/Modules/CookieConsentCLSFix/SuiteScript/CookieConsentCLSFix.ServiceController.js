@@ -1,10 +1,10 @@
-define("OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.ServiceController", ["ServiceController"], function(
+define("OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.ServiceController", ["ServiceController"], function(
   ServiceController
 ) {
   "use strict";
 
   return ServiceController.extend({
-    name: "OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.ServiceController",
+    name: "OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.ServiceController",
 
     // The values in this object are the validation needed for the current service.
     options: {

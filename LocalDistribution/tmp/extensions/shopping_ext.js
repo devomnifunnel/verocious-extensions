@@ -332,6 +332,156 @@ define('default.CanonicalFix.CanonicalFix', [
 
 };
 
+extensions['OmniFunnelMarketing.CookieConsentCLSFix.1.0.0'] = function(){
+
+function getExtensionAssetsPath(asset){
+	return 'extensions/OmniFunnelMarketing/CookieConsentCLSFix/1.0.0/' + asset;
+}
+
+// @module OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix
+define('OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View'
+,	[
+	'omnifunnelmarketing_cookieconsentclsfix_cookieconsentclsfix.tpl'
+	
+	,	'OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.SS2Model'
+	
+	,	'Backbone'
+    ]
+, function (
+	omnifunnelmarketing_cookieconsentclsfix_cookieconsentclsfix_tpl
+	
+	,	CookieConsentCLSFixSS2Model
+	
+	,	Backbone
+)
+{
+    'use strict';
+
+	// @class OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View @extends Backbone.View
+	return Backbone.View.extend({
+
+		template: omnifunnelmarketing_cookieconsentclsfix_cookieconsentclsfix_tpl
+
+	,	initialize: function (options) {
+
+			/*  Uncomment to test backend communication with an example service
+				(you'll need to deploy and activate the extension first)
+			*/
+
+			// this.model = new CookieConsentCLSFixModel();
+			// var self = this;
+         	// this.model.fetch().done(function(result) {
+			// 	self.message = result.message;
+			// 	self.render();
+      		// });
+		}
+
+	,	events: {
+		}
+
+	,	bindings: {
+		}
+
+	, 	childViews: {
+
+		}
+
+		//@method getContext @return OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View.Context
+	,	getContext: function getContext()
+		{
+			//@class OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View.Context
+			this.message = this.message || 'Hello World!!'
+			return {
+				message: this.message
+			};
+		}
+	});
+});
+
+
+// Model.js
+// -----------------------
+// @module Case
+define("OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.Model", ["Backbone", "Utils"], function(
+    Backbone,
+    Utils
+) {
+    "use strict";
+
+    // @class Case.Fields.Model @extends Backbone.Model
+    return Backbone.Model.extend({
+
+        
+        //@property {String} urlRoot
+        urlRoot: Utils.getAbsoluteUrl(
+            getExtensionAssetsPath(
+                "services/CookieConsentCLSFix.Service.ss"
+            )
+        )
+        
+});
+});
+
+
+// Model.js
+// -----------------------
+// @module Case
+define("OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.SS2Model", ["Backbone", "Utils"], function(
+    Backbone,
+    Utils
+) {
+    "use strict";
+
+    // @class Case.Fields.Model @extends Backbone.Model
+    return Backbone.Model.extend({
+        //@property {String} urlRoot
+        urlRoot: Utils.getAbsoluteUrl(
+            getExtensionAssetsPath(
+                "Modules/CookieConsentCLSFix/SuiteScript2/CookieConsentCLSFix.Service.ss"
+            ),
+            true
+        )
+});
+});
+
+
+
+define(
+	'OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix'
+,   [
+		'OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View'
+	]
+,   function (
+		CookieConsentCLSFixView
+	)
+{
+	'use strict';
+
+	return  {
+		mountToApp: function mountToApp (container)
+		{
+			// using the 'Layout' component we add a new child view inside the 'Header' existing view 
+			// (there will be a DOM element with the HTML attribute data-view="Header.Logo")
+			// more documentation of the Extensibility API in
+			// https://system.netsuite.com/help/helpcenter/en_US/APIs/SuiteCommerce/Extensibility/Frontend/index.html
+			
+			// /** @type {LayoutComponent} */
+			// var layout = container.getComponent('Layout');
+			
+			// if(layout)
+			// {
+			// 	layout.addChildView('Header.Logo', function() { 
+			// 		return new CookieConsentCLSFixView({ container: container });
+			// 	});
+			// }
+
+		}
+	};
+});
+
+
+};
+
 extensions['NSeComm.CustomPageTitleSuffix.1.1.0'] = function(){
 
 function getExtensionAssetsPath(asset){
@@ -1428,10 +1578,20 @@ define('NSeComm.ReorderSizeList.Main', [
 
 };
 
-SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model"];
+SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.Model","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model"];
 try{
 	extensions['OmniFunnelMarketing.CanonicalFix.1.0.0']();
 	SC.addExtensionModule('default.CanonicalFix.CanonicalFix');
+}
+catch(error)
+{
+	console.error(error);
+}
+
+
+try{
+	extensions['OmniFunnelMarketing.CookieConsentCLSFix.1.0.0']();
+	SC.addExtensionModule('OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix');
 }
 catch(error)
 {
