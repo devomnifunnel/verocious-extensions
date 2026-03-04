@@ -390,10 +390,10 @@ define('OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View'
 	,	getContext: function getContext()
 		{
 			//@class OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View.Context
-			// this.message = this.message || 'Hello World!!'
-			// return {
-			// 	message: this.message
-			// };
+			this.message = this.message || 'Hello World!!'
+			return {
+				message: this.message
+			};
 		}
 	});
 });

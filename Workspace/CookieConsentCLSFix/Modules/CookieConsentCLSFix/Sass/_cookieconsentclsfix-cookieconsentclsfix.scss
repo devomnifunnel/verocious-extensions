@@ -5,36 +5,42 @@
 	Example:
 	@import "other-sass-file.scss";
 	@import "../../<other module>/Sass/other-sass-file.scss";
-*/ 
+*/
 
 .cookieconsentclsfix-info-card {
-    @extend .info-card;
+  @extend .info-card;
 }
 
 .cookieconsentclsfix-info-card-content {
-    @extend .info-card-content;
-    color: $sc-color-secondary;
-    font-weight: bold;
+  @extend .info-card-content;
+  color: $sc-color-secondary;
+  font-weight: bold;
 }
-/* CLS Fix: CookieConsent Overlay - prevents layout shift on page load */
-/* Ticket: CLS Fix (03/03/26) */
+
+/* CookieConsent CLS Fix — FINAL (03/04/26) */
 [data-view="cookieConsent-overlay"] {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 10000 !important;
-    height: 0 !important;
-    overflow: visible !important;
-    pointer-events: none !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 10000 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  contain: layout style !important;
 }
 [data-view="cookieConsent-overlay"] > * {
-    pointer-events: auto;
+  pointer-events: auto;
 }
 #cookieConsentBackdrop {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+  display: none !important;
+}
+#cookieconsent-banner,
+.cookieconsent-overlay-banner-bottom,
+.cookieconsent-overlay-banner-top {
+  position: fixed !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  z-index: 10000 !important;
+  contain: layout !important;
 }
