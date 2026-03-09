@@ -26,8 +26,20 @@ define('NSeComm.PacejetIntegration.Main', [
 
             if (checkout) {
                 checkout.addToViewContextDefinition('OrderWizard.Module.Shipmethod', 'shippingMethods', 'array', function refreshDeliveryDates(context) {
-                    // sort ship methods by rate
+                    // Format free shipping methods and sort by rate
+                    _.each(context.shippingMethods, function formatFreeShip(method) {
+                        if (method.isFreeShipping) {
+                            method.rate_formatted = 'FREE';
+                            if (method.name.indexOf('(Free Shipping)') === -1) {
+                                method.name = method.name + ' (Free Shipping)';
+                            }
+                        }
+                    });
+
                     return _.sortBy(context.shippingMethods, function sortByRate(shipMethod) {
+                        if (shipMethod.isFreeShipping) {
+                            return -1;
+                        }
                         return parseFloat(shipMethod.rate_formatted.substring(1).replace(/[!.,]/g, '')) || 0;
                     });
                 });
