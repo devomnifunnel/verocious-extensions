@@ -18,7 +18,7 @@ function PacejetIntegration(
             var day = shipmethod.transitTime === 1 ? 'Day' : 'Days';
             var name = shipmethod.transitTime ? shipmethod.name + ' ' + shipmethod.transitTime + ' ' + day : shipmethod.name;
 
-            return {
+            var result = {
                 name: name,
                 rate_formatted: shipmethod.rate_formatted,
                 rate: shipmethod.rate,
@@ -27,6 +27,14 @@ function PacejetIntegration(
                 accountNumber: shipmethod.accountNumber,
                 transitTime: shipmethod.transitTime
             };
+
+            // VMS Free Shipping: pass through free shipping properties
+            if (shipmethod.isFreeShipping) {
+                result.isFreeShipping = true;
+                result.originalRate = shipmethod.originalRate;
+            }
+
+            return result;
         });
     }
 

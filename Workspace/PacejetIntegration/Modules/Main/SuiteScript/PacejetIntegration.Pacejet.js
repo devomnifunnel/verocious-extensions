@@ -206,18 +206,25 @@ function PacejetIntegrationPacejet(
         var groundMethods;
         var cheapest;
 
+        nlapiLogExecution('audit', '[FreeShip] Evaluating', 'subtotal=' + orderSubtotal
+            + ' maxLen=' + (itemsProperties.maxLen ? itemsProperties.maxLen.itemLength : 'none')
+            + ' maxWeight=' + itemsProperties.maxWeight);
+
         // Rule 1: order subtotal must exceed threshold
         if (!orderSubtotal || orderSubtotal <= FREE_SHIP_MIN_SUBTOTAL) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'subtotal ' + orderSubtotal + ' <= ' + FREE_SHIP_MIN_SUBTOTAL);
             return;
         }
 
         // Rule 2: no item longer than length limit
         if (itemsProperties.maxLen && itemsProperties.maxLen.itemLength > FREE_SHIP_MAX_LENGTH) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'item length ' + itemsProperties.maxLen.itemLength + ' > ' + FREE_SHIP_MAX_LENGTH);
             return;
         }
 
         // Rule 3: no individual item weight at or above weight limit
         if (itemsProperties.maxWeight >= FREE_SHIP_MAX_WEIGHT) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'item weight ' + itemsProperties.maxWeight + ' >= ' + FREE_SHIP_MAX_WEIGHT);
             return;
         }
 
@@ -227,6 +234,7 @@ function PacejetIntegrationPacejet(
         });
 
         if (groundMethods.length === 0) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'no ground methods with positive rate');
             return;
         }
 
@@ -239,6 +247,9 @@ function PacejetIntegrationPacejet(
         cheapest.rate = 0;
         cheapest.rate_formatted = '$0.00';
         cheapest.isFreeShipping = true;
+
+        nlapiLogExecution('audit', '[FreeShip] APPLIED', 'method=' + cheapest.internalid
+            + ' name=' + cheapest.name + ' originalRate=' + cheapest.originalRate);
     }
 
     return {
@@ -279,12 +290,14 @@ function PacejetIntegrationPacejet(
                 // VMS Free Shipping: evaluate eligibility for prepaid (non collect) customers only
                 try {
                     var currentSiteId = String(nlapiGetWebContainer().getShoppingSession().getSiteSettings(['siteid']).siteid);
+                    nlapiLogExecution('audit', '[FreeShip] Site check', 'currentSiteId=' + currentSiteId + ' target=' + FREE_SHIP_SITE_ID);
                     if (currentSiteId === FREE_SHIP_SITE_ID) {
                         var orderSubtotal = parseFloat(order.getFieldValue('subtotal')) || 0;
+                        nlapiLogExecution('audit', '[FreeShip] Subtotal', 'orderSubtotal=' + orderSubtotal);
                         evaluateFreeShipping(newShipmethods, orderSubtotal, itemsProperties);
                     }
                 } catch (freeShipErr) {
-                    nlapiLogExecution('error', 'Free shipping evaluation error', JSON.stringify(freeShipErr));
+                    nlapiLogExecution('error', '[FreeShip] Evaluation error', JSON.stringify(freeShipErr));
                 }
             }
 
