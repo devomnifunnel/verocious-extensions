@@ -292,7 +292,7 @@ function PacejetIntegrationPacejet(
                     var currentSiteId = String(nlapiGetWebContainer().getShoppingSession().getSiteSettings(['siteid']).siteid);
                     nlapiLogExecution('audit', '[FreeShip] Site check', 'currentSiteId=' + currentSiteId + ' target=' + FREE_SHIP_SITE_ID);
                     if (currentSiteId === FREE_SHIP_SITE_ID) {
-                        var orderSubtotal = parseFloat(order.getFieldValue('subtotal')) || 0;
+                        var orderSubtotal = parseFloat(results.summary && results.summary.subtotal) || 0;
                         nlapiLogExecution('audit', '[FreeShip] Subtotal', 'orderSubtotal=' + orderSubtotal);
                         evaluateFreeShipping(newShipmethods, orderSubtotal, itemsProperties);
                     }

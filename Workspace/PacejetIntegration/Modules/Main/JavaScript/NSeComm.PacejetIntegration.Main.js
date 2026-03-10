@@ -26,9 +26,12 @@ define('NSeComm.PacejetIntegration.Main', [
 
             if (checkout) {
                 checkout.addToViewContextDefinition('OrderWizard.Module.Shipmethod', 'shippingMethods', 'array', function refreshDeliveryDates(context) {
+                    console.log('[FreeShip FE] Hook fired, methods:', context.shippingMethods.length);
                     // Format free shipping methods and sort by rate
                     _.each(context.shippingMethods, function formatFreeShip(method) {
+                        console.log('[FreeShip FE] Method:', method.internalid, method.name, 'rate:', method.rate, 'isFreeShipping:', method.isFreeShipping);
                         if (method.isFreeShipping) {
+                            console.log('[FreeShip FE] FORMATTING free method:', method.internalid, method.name);
                             method.rate_formatted = 'FREE';
                             if (method.name.indexOf('(Free Shipping)') === -1) {
                                 method.name = method.name + ' (Free Shipping)';
