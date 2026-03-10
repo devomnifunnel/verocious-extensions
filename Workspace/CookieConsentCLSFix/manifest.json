@@ -2,14 +2,15 @@
     "name": "CookieConsentCLSFix",
     "fantasyName": "CookieConsentCLSFix",
     "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
     "type": "extension",
     "target": "SCA,SCS",
     "target_version": {
         "SCA": ">=25.1.0",
         "SCS": ">=25.1.0"
     },
-    "version": "1.0.0",
     "description": "Fixes CLS (Cumulative Layout Shift) caused by CookieConsent overlay positioning",
+    "skins": [],
     "assets": {
         "img": {
             "files": []
@@ -28,6 +29,14 @@
             "Modules/CookieConsentCLSFix/Configuration/CookieConsentCLSFix.json"
         ]
     },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/CookieConsentCLSFix/Sass/_cookieconsentclsfix-cookieconsentclsfix.scss"
+        },
+        "files": [
+            "Modules/CookieConsentCLSFix/Sass/_cookieconsentclsfix-cookieconsentclsfix.scss"
+        ]
+    },
     "templates": {
         "application": {
             "shopping": {
@@ -36,14 +45,6 @@
                 ]
             }
         }
-    },
-    "sass": {
-        "entry_points": {
-            "shopping": "Modules/CookieConsentCLSFix/Sass/_cookieconsentclsfix-cookieconsentclsfix.scss"
-        },
-        "files": [
-            "Modules/CookieConsentCLSFix/Sass/_cookieconsentclsfix-cookieconsentclsfix.scss"
-        ]
     },
     "javascript": {
         "entry_points": {
@@ -67,6 +68,7 @@
             "Modules/CookieConsentCLSFix/SuiteScript/CookieConsentCLSFix.ServiceController.js"
         ]
     },
+    "local_folder": "Workspace/CookieConsentCLSFix",
     "suitescript2": {
         "files": [
             "Modules/CookieConsentCLSFix/SuiteScript2/CookieConsentCLSFix.Service.ss"

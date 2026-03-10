@@ -137,6 +137,9 @@ function PacejetIntegrationPacejet(
             return a + b;
         }, 0);
         result.maxLen = _.max(itemLenArr, 'itemLength');
+        result.maxWeight = itemWeightArr.length > 0
+            ? Math.max.apply(null, itemWeightArr)
+            : 0;
 
         return result;
     }
@@ -192,6 +195,71 @@ function PacejetIntegrationPacejet(
         });
     }
 
+    // VMS Free Shipping: only applies to VMS (site 3), not Austenitex (site 4)
+    var FREE_SHIP_SITE_ID = '3';
+    var FREE_SHIP_GROUND_IDS = ['3184', '59111', '172303'];
+    var FREE_SHIP_MIN_SUBTOTAL = 500.00;
+    var FREE_SHIP_MAX_LENGTH = 48.0;
+    var FREE_SHIP_MAX_WEIGHT = 150.0;
+
+    function evaluateFreeShipping(newShipmethods, orderSubtotal, itemsProperties) {
+        var groundMethods;
+        var cheapest;
+
+        nlapiLogExecution('audit', '[FreeShip] Evaluating', 'subtotal=' + orderSubtotal
+            + ' maxLen=' + (itemsProperties.maxLen ? itemsProperties.maxLen.itemLength : 'none')
+            + ' maxWeight=' + itemsProperties.maxWeight);
+
+        // Rule 1: order subtotal must exceed threshold
+        if (!orderSubtotal || orderSubtotal <= FREE_SHIP_MIN_SUBTOTAL) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'subtotal ' + orderSubtotal + ' <= ' + FREE_SHIP_MIN_SUBTOTAL);
+            return;
+        }
+
+        // Rule 2: no item longer than length limit
+        if (itemsProperties.maxLen && itemsProperties.maxLen.itemLength > FREE_SHIP_MAX_LENGTH) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'item length ' + itemsProperties.maxLen.itemLength + ' > ' + FREE_SHIP_MAX_LENGTH);
+            return;
+        }
+
+        // Rule 3: no individual item weight at or above weight limit
+        if (itemsProperties.maxWeight >= FREE_SHIP_MAX_WEIGHT) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'item weight ' + itemsProperties.maxWeight + ' >= ' + FREE_SHIP_MAX_WEIGHT);
+            return;
+        }
+
+        // Find ground methods that have a positive rate from Pacejet
+        groundMethods = _.filter(newShipmethods, function isGround(method) {
+            return FREE_SHIP_GROUND_IDS.indexOf(method.internalid) > -1 && method.rate > 0;
+        });
+
+        if (groundMethods.length === 0) {
+            nlapiLogExecution('audit', '[FreeShip] SKIP', 'no ground methods with positive rate');
+            return;
+        }
+
+        // DIAGNOSTIC: log all ground method candidates before selection
+        _.each(groundMethods, function logCandidate(method, idx) {
+            nlapiLogExecution('audit', '[FreeShip] CANDIDATE ' + (idx + 1) + '/' + groundMethods.length,
+                'id=' + method.internalid + ' name=' + method.name
+                + ' rate=' + method.rate + ' (type=' + typeof method.rate + ')'
+                + ' transitTime=' + (method.transitTime || 'n/a'));
+        });
+
+        // Pick the cheapest ground method and zero its rate
+        cheapest = _.min(groundMethods, function byRate(method) {
+            return method.rate;
+        });
+
+        cheapest.originalRate = cheapest.rate;
+        cheapest.rate = 0;
+        cheapest.rate_formatted = '$0.00';
+        cheapest.isFreeShipping = true;
+
+        nlapiLogExecution('audit', '[FreeShip] APPLIED', 'method=' + cheapest.internalid
+            + ' name=' + cheapest.name + ' originalRate=' + cheapest.originalRate);
+    }
+
     return {
         getShippingRates: function getShippingRates(results, data, order) {
             var shipAddress = Helper.shippingAddress(order, results, data);
@@ -226,6 +294,19 @@ function PacejetIntegrationPacejet(
             } else {
                 packageMethod = updateRates(shipMethods, newShipmethods, pacejetRates, data, false);
                 addWillCallMethod(shipMethods, pacejetConfig, newShipmethods);
+
+                // VMS Free Shipping: evaluate eligibility for prepaid (non collect) customers only
+                try {
+                    var currentSiteId = String(nlapiGetWebContainer().getShoppingSession().getSiteSettings(['siteid']).siteid);
+                    nlapiLogExecution('audit', '[FreeShip] Site check', 'currentSiteId=' + currentSiteId + ' target=' + FREE_SHIP_SITE_ID);
+                    if (currentSiteId === FREE_SHIP_SITE_ID) {
+                        var orderSubtotal = parseFloat(results.summary && results.summary.subtotal) || 0;
+                        nlapiLogExecution('audit', '[FreeShip] Subtotal', 'orderSubtotal=' + orderSubtotal);
+                        evaluateFreeShipping(newShipmethods, orderSubtotal, itemsProperties);
+                    }
+                } catch (freeShipErr) {
+                    nlapiLogExecution('error', '[FreeShip] Evaluation error', JSON.stringify(freeShipErr));
+                }
             }
 
             results.shipmethods = newShipmethods;
