@@ -100,7 +100,11 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Facet Browse - Header main content layout
 
-.facets-facet-browse-content,
+.facets-facet-browse-content {
+  @extend .clearfix;
+  min-height: 500px;
+}
+
 .facets-facet-browse-empty-items {
   @extend .clearfix;
 }
@@ -135,6 +139,7 @@
     padding-right: $sc-padding-lv3;
     width: 25%;
     background-color: transparent;
+    min-height: 300px;
   }
 }
 
@@ -145,6 +150,7 @@
 .facets-facet-browse-results {
   @extend .col-md-9;
   padding: 0;
+  contain: layout;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +178,8 @@
 }
 
 .facets-facet-browse-items {
+  min-height: 400px;
+
   .item-cell-price {
     margin-bottom: $sc-margin-lv2;
   }

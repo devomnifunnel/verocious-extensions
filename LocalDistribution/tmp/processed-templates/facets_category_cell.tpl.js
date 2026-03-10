@@ -7,7 +7,7 @@ define('facets_category_cell.tpl', ['Handlebars','Handlebars.CompilerNameLookup'
     + alias4((compilerNameLookup(helpers,"resizeImage")||(depth0 && compilerNameLookup(depth0,"resizeImage"))||alias2).call(alias1,(depth0 != null ? compilerNameLookup(depth0,"image") : depth0),"thumbnail",{"name":"resizeImage","hash":{},"data":data,"loc":{"start":{"line":5,"column":14},"end":{"line":5,"column":47}}}))
     + "\" alt=\""
     + alias4(((helper = (helper = compilerNameLookup(helpers,"name") || (depth0 != null ? compilerNameLookup(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":5,"column":54},"end":{"line":5,"column":62}}}) : helper)))
-    + "\" class=\"facets-category-cell-image\">\n			</a>\n		</div>\n";
+    + "\" class=\"facets-category-cell-image\" width=\"186\" height=\"186\">\n			</a>\n		</div>\n";
 },"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression;
 

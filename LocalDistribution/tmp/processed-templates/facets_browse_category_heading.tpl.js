@@ -11,7 +11,7 @@ define('facets_browse_category_heading.tpl', ['Handlebars','Handlebars.CompilerN
     + alias3((compilerNameLookup(helpers,"resizeImage")||(depth0 && compilerNameLookup(depth0,"resizeImage"))||alias2).call(alias1,(depth0 != null ? compilerNameLookup(depth0,"banner") : depth0),"categorybanner",{"name":"resizeImage","hash":{},"data":data,"loc":{"start":{"line":10,"column":13},"end":{"line":10,"column":52}}}))
     + "\" alt=\""
     + alias3(((helper = (helper = compilerNameLookup(helpers,"pageheading") || (depth0 != null ? compilerNameLookup(depth0,"pageheading") : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"pageheading","hash":{},"data":data,"loc":{"start":{"line":10,"column":59},"end":{"line":10,"column":74}}}) : helper)))
-    + "\" />\n		</div>\n";
+    + "\" width=\"940\" height=\"200\" style=\"width:100%;height:auto;\" />\n		</div>\n";
 },"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
