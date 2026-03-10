@@ -238,6 +238,14 @@ function PacejetIntegrationPacejet(
             return;
         }
 
+        // DIAGNOSTIC: log all ground method candidates before selection
+        _.each(groundMethods, function logCandidate(method, idx) {
+            nlapiLogExecution('audit', '[FreeShip] CANDIDATE ' + (idx + 1) + '/' + groundMethods.length,
+                'id=' + method.internalid + ' name=' + method.name
+                + ' rate=' + method.rate + ' (type=' + typeof method.rate + ')'
+                + ' transitTime=' + (method.transitTime || 'n/a'));
+        });
+
         // Pick the cheapest ground method and zero its rate
         cheapest = _.min(groundMethods, function byRate(method) {
             return method.rate;
