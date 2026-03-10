@@ -7,7 +7,7 @@
 	</div>
 	{{#if hasBanner}}
 		<div class="facets-browse-category-heading-main-image">
-			<img src="{{resizeImage banner 'categorybanner'}}" alt="{{pageheading}}" width="940" height="200" style="width:100%;height:auto;" />
+			<img src="{{resizeImage banner 'categorybanner'}}" alt="{{pageheading}}" />
 		</div>
 	{{/if}}
 </section>

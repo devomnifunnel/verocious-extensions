@@ -1,5 +1,4 @@
 /* Edited for Summit Theme */
-/* CLS Fix: Category cell images with stable dimensions */
 
 .facets-category-cell {
   float: left;
@@ -31,18 +30,11 @@
 }
 
 .facets-category-cell-thumbnail {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  overflow: hidden;
-  background-color: $sc-neutral-shade-200;
 }
 
 .facets-category-cell-image {
-  width: 100%;
+  width: auto !important;
   height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: contain;
-  display: block;
 }
 
 .facets-category-cell-title {
@@ -51,3 +43,4 @@
 
 .facets-category-cell-anchor {
 }
+

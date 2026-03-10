@@ -2,7 +2,7 @@
 	{{#if hasImage}}
 		<div class="facets-category-cell-thumbnail">
 			<a href="{{url}}" class="facets-category-cell-anchor">
-				<img src="{{resizeImage image 'thumbnail'}}" alt="{{name}}" class="facets-category-cell-image" width="186" height="186">
+				<img src="{{resizeImage image 'thumbnail'}}" alt="{{name}}" class="facets-category-cell-image">
 			</a>
 		</div>
 	{{/if}}
