@@ -1448,6 +1448,99 @@ function getExtensionAssetsPath(asset){
 	return 'extensions/BluePoint/ReCaptcha/1.0.0/' + asset;
 }
 
+define('BluePoint.ReCaptcha.Loader', [
+    'jQuery'
+], function (jQuery) {
+    'use strict';
+
+    var _siteKey = null;
+    var _loadPromise = null;
+    var _isLoaded = false;
+
+    return {
+
+        /**
+         * Store the site key (does NOT load anything yet)
+         * @param {string} siteKey
+         */
+        initialize: function initialize(siteKey) {
+            _siteKey = siteKey;
+        },
+
+        /**
+         * Load api.js ONCE, asynchronously
+         * Returns a promise that resolves when grecaptcha is ready
+         * Safe to call multiple times - only loads once
+         * @returns {jQuery.Deferred.promise}
+         */
+        load: function load() {
+            // If already loading or loaded, return existing promise
+            if (_loadPromise) {
+                return _loadPromise;
+            }
+
+            var deferred = jQuery.Deferred();
+            _loadPromise = deferred.promise();
+
+            // Create script element with async attribute
+            var script = document.createElement('script');
+            script.src = 'https://www.google.com/recaptcha/api.js?render=' + _siteKey;
+            script.async = true;
+            script.defer = true;
+
+            script.onload = function onApiLoaded() {
+                // Wait for grecaptcha to be fully ready
+                grecaptcha.ready(function onGrecaptchaReady() {
+                    _isLoaded = true;
+                    console.log('[ReCaptcha Loader] api.js loaded and ready (single instance).');
+                    deferred.resolve(grecaptcha);
+                });
+            };
+
+            script.onerror = function onApiError() {
+                console.error('[ReCaptcha Loader] Failed to load api.js');
+                _loadPromise = null; // Allow retry on next call
+                deferred.reject(new Error('Failed to load reCAPTCHA api.js'));
+            };
+
+            document.head.appendChild(script);
+            console.log('[ReCaptcha Loader] Loading api.js asynchronously...');
+
+            return _loadPromise;
+        },
+
+        /**
+         * Load (if needed) then execute reCAPTCHA and return a token
+         * This is what the views call on form submit
+         * @param {string} [action='login'] - reCAPTCHA action name
+         * @returns {jQuery.Deferred.promise} Resolves with token string
+         */
+        execute: function execute(action) {
+            return this.load().then(function onReady(grecaptcha) {
+                return grecaptcha.execute(_siteKey, {
+                    action: action || 'login'
+                });
+            });
+        },
+
+        /**
+         * Check if reCAPTCHA has loaded
+         * @returns {boolean}
+         */
+        isLoaded: function isLoaded() {
+            return _isLoaded;
+        },
+
+        /**
+         * Get the site key
+         * @returns {string}
+         */
+        getSiteKey: function getSiteKey() {
+            return _siteKey;
+        }
+    };
+});
+
 // Model.js
 // -----------------------
 // @module Case
@@ -1471,264 +1564,285 @@ define("BluePoint.ReCaptcha.ReCaptcha.SS2Model", ["Backbone", "Utils"], function
 
 
 define('BluePoint.ReCaptcha.ReCaptcha.Login.View', [
-	'bp_recaptcha_recaptcha_login.tpl'
-,	'jQuery'
-,	'Backbone'
-,	'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+    'bp_recaptcha_recaptcha_login.tpl'
+,   'jQuery'
+,   'Backbone'
+,   'BluePoint.ReCaptcha.Loader'
+,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
 ], function (
-	bp_recaptcha_recaptcha_login_tpl
-,	jQuery
-,	Backbone
-,	RecaptchaModel
+    bp_recaptcha_recaptcha_login_tpl
+,   jQuery
+,   Backbone
+,   RecaptchaLoader
+,   RecaptchaModel
 ) {
-	'use strict';
+    'use strict';
 
-	return Backbone.View.extend({
+    return Backbone.View.extend({
 
-		template: bp_recaptcha_recaptcha_login_tpl,
+        template: bp_recaptcha_recaptcha_login_tpl,
 
-		initialize: function (options) {
-			var self = this;
-			this.application = options.application;
-			this.environment = options.environment;
-			var keyList = this.environment.getConfig('recaptcha.keylist');
-			var siteKey = keyList[0].sitekey;
-			var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+        initialize: function (options) {
+            var self = this;
+            this.application = options.application;
+            this.isVerocious = options.isVerocious;
 
-			this.recaptchaModel = new RecaptchaModel();
+            this.recaptchaModel = new RecaptchaModel();
 
-			this.options.LoginRegisterPage.on('beforeLogin', function () {
-				var defer = jQuery.Deferred();
+            this.options.LoginRegisterPage.on('beforeLogin', function () {
+                var defer = jQuery.Deferred();
 
-				grecaptcha.ready(function () {
-					grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-						self.$('input[name="g-recaptcha-response"]').val(token);
-						
-						self.recaptchaModel.fetch({
-							data: {
-								'token': token,
-								'isVerocious': isVerocious
-							}
-						}).done(function (response) {
-							if (response.data && response.data.success) {
-								defer.resolve();
-							} else {
-								self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-								defer.reject();
-							}
-						}).fail(function () {
-							defer.reject();
-						});
-					});
-				});
-				return defer.promise();
-			});
-		}
+                // Loader handles loading api.js (once, async) + executing
+                RecaptchaLoader.execute('login')
+                    .then(function (token) {
+                        self.$('input[name="g-recaptcha-response"]').val(token);
 
-		, getContext: function getContext() {
-			var keyList = this.environment.getConfig('recaptcha.keylist');
-			var siteKey = keyList[0].sitekey;
-			return {
-				siteKey: siteKey
-			};
-		}
-	});
+                        return self.recaptchaModel.fetch({
+                            data: {
+                                'token': token,
+                                'isVerocious': self.isVerocious
+                            }
+                        });
+                    })
+                    .then(function (response) {
+                        if (response.data && response.data.success) {
+                            defer.resolve();
+                        } else {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. If you are not a robot then please try again.'
+                            );
+                            defer.reject();
+                        }
+                    })
+                    .fail(function () {
+                        self.application.getLayout().showErrorInModal(
+                            'Captcha validation failed. Please try again.'
+                        );
+                        defer.reject();
+                    });
+
+                return defer.promise();
+            });
+        }
+
+        , getContext: function getContext() {
+            return {};
+        }
+    });
 });
 
-
 define('BluePoint.ReCaptcha.Recaptcha.Register.View'
-	, [
-		'bp_recaptcha_recaptcha_register.tpl'
-	, 	'jQuery'
-	, 	'Backbone'
-	, 	'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
-	]
-	, function (
-		bp_recaptcha_recaptcha_register_tpl
-	, 	jQuery
-	, 	Backbone
-	, 	RecaptchaModel
-	) {
-		'use strict';
+,   [
+        'bp_recaptcha_recaptcha_register.tpl'
+    ,   'jQuery'
+    ,   'Backbone'
+    ,   'BluePoint.ReCaptcha.Loader'
+    ,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+    ]
+,   function (
+        bp_recaptcha_recaptcha_register_tpl
+    ,   jQuery
+    ,   Backbone
+    ,   RecaptchaLoader
+    ,   RecaptchaModel
+    ) {
+        'use strict';
 
-		// @class WB.GoogleRecaptchaApruvd.Recaptcha.View @extends Backbone.View
-		return Backbone.View.extend({
+        return Backbone.View.extend({
 
-			template: bp_recaptcha_recaptcha_register_tpl,
+            template: bp_recaptcha_recaptcha_register_tpl,
 
-			initialize: function (options) {
-				var self = this;
-				this.application = options.application;
-				this.environment = options.environment;
-				var keyList = this.environment.getConfig('recaptcha.keylist');
-				var siteKey = keyList[0].sitekey;
-				var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+            initialize: function (options) {
+                var self = this;
+                this.application = options.application;
+                this.isVerocious = options.isVerocious;
 
-				this.recaptchaModel = new RecaptchaModel();
+                this.recaptchaModel = new RecaptchaModel();
 
-				this.options.LoginRegisterPage.on('beforeRegister', function () {
-					var defer = jQuery.Deferred();
+                this.options.LoginRegisterPage.on('beforeRegister', function () {
+                    var defer = jQuery.Deferred();
 
-					grecaptcha.ready(function () {
-						grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-							self.$('input[name="g-recaptcha-response-register"]').val(token);
-							self.recaptchaModel.fetch({
-								data: {
-									'token': token,
-									'isVerocious': isVerocious
-								}
-							}).done(function (response) {
-								if (response.data && response.data.success) {
-									defer.resolve();
-								} else {
-									self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-									defer.reject();
-								}
-							}).fail(function () {
-								defer.reject();
-							});
-						});
-					});
-					return defer.promise();
-				});
-			}
+                    RecaptchaLoader.execute('login')
+                        .then(function (token) {
+                            self.$('input[name="g-recaptcha-response-register"]').val(token);
 
-			, getContext: function getContext() {
-				var keyList = this.environment.getConfig('recaptcha.keylist');
-				var siteKey = keyList[0].sitekey;
-				return {
-					siteKey: siteKey
-				};
-			}
-		});
-	});
+                            return self.recaptchaModel.fetch({
+                                data: {
+                                    'token': token,
+                                    'isVerocious': self.isVerocious
+                                }
+                            });
+                        })
+                        .then(function (response) {
+                            if (response.data && response.data.success) {
+                                defer.resolve();
+                            } else {
+                                self.application.getLayout().showErrorInModal(
+                                    'Captcha validation failed. If you are not a robot then please try again.'
+                                );
+                                defer.reject();
+                            }
+                        })
+                        .fail(function () {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. Please try again.'
+                            );
+                            defer.reject();
+                        });
 
+                    return defer.promise();
+                });
+            }
+
+            , getContext: function getContext() {
+                return {};
+            }
+        });
+    });
 
 define('BluePoint.ReCaptcha.ReCaptcha.Checkout.View', [
     'bp_recaptcha_recaptcha_checkout.tpl'
-  , 'jQuery'
-  , 'Backbone'
-  , 'LiveOrder.Model'
-  , 'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+,   'jQuery'
+,   'Backbone'
+,   'LiveOrder.Model'
+,   'BluePoint.ReCaptcha.Loader'
+,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
 ]
-  , function (
-      bp_recaptcha_recaptcha_checkout_tpl
-    , jQuery
-    , Backbone
-    , LiveOrderModel
-    , RecaptchaModel
-  ) {
-    'use strict';
+,   function (
+        bp_recaptcha_recaptcha_checkout_tpl
+    ,   jQuery
+    ,   Backbone
+    ,   LiveOrderModel
+    ,   RecaptchaLoader
+    ,   RecaptchaModel
+    ) {
+        'use strict';
 
-    // @class Recaptcha.Checkout.View @extends Backbone.View
-    return Backbone.View.extend({
+        return Backbone.View.extend({
 
-      template: bp_recaptcha_recaptcha_checkout_tpl
+            template: bp_recaptcha_recaptcha_checkout_tpl,
 
-      , initialize: function (options) {
-        var self = this;
-        this.application = options.application;
-        this.environment = options.environment;
-        var keyList = this.environment.getConfig('recaptcha.keylist');
-        var siteKey = keyList[0].sitekey;
-        var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+            initialize: function (options) {
+                var self = this;
+                this.application = options.application;
+                this.isVerocious = options.isVerocious;
 
-        this.recaptchaModel = new RecaptchaModel();
-        var liveOrderInstance = LiveOrderModel.getInstance();
+                this.recaptchaModel = new RecaptchaModel();
+                var liveOrderInstance = LiveOrderModel.getInstance();
 
-        liveOrderInstance.cancelableOn('before:LiveOrder.submit', function beforeLiveOrderSubmitRecaptchaHandler() {
-          var defer = jQuery.Deferred();
+                liveOrderInstance.cancelableOn('before:LiveOrder.submit', function beforeLiveOrderSubmitRecaptchaHandler() {
+                    var defer = jQuery.Deferred();
 
-          grecaptcha.ready(function () {
-            grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-              self.$('input[name="g-recaptcha-response"]').val(token);
-              self.recaptchaModel.fetch({
-                data: {
-                  'token': token,
-                  'isVerocious': isVerocious
-                }
-              }).done(function (response) {
-                if (response.data && response.data.success) {
-                  defer.resolve();
-                } else {
-                  self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-                  defer.reject();
-                }
-              }).fail(function () {
-                defer.reject();
-              });
-            });
-          });
-          return defer.promise();
+                    RecaptchaLoader.execute('login')
+                        .then(function (token) {
+                            self.$('input[name="g-recaptcha-response"]').val(token);
+
+                            return self.recaptchaModel.fetch({
+                                data: {
+                                    'token': token,
+                                    'isVerocious': self.isVerocious
+                                }
+                            });
+                        })
+                        .then(function (response) {
+                            if (response.data && response.data.success) {
+                                defer.resolve();
+                            } else {
+                                self.application.getLayout().showErrorInModal(
+                                    'Captcha validation failed. If you are not a robot then please try again.'
+                                );
+                                defer.reject();
+                            }
+                        })
+                        .fail(function () {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. Please try again.'
+                            );
+                            defer.reject();
+                        });
+
+                    return defer.promise();
+                });
+            }
+
+            , getContext: function getContext() {
+                return {};
+            }
         });
-      }
-
-      , getContext: function getContext() {
-        var keyList = this.environment.getConfig('recaptcha.keylist');
-        var siteKey = keyList[0].sitekey;
-        return {
-          siteKey: siteKey
-        };
-      }
     });
-  });
-
-
 
 define('BluePoint.ReCaptcha.ReCaptcha'
 ,   [
-		'BluePoint.ReCaptcha.ReCaptcha.Login.View',
-		'BluePoint.ReCaptcha.Recaptcha.Register.View',
-		'BluePoint.ReCaptcha.ReCaptcha.Checkout.View'
-	]
+        'BluePoint.ReCaptcha.Loader',
+        'BluePoint.ReCaptcha.ReCaptcha.Login.View',
+        'BluePoint.ReCaptcha.Recaptcha.Register.View',
+        'BluePoint.ReCaptcha.ReCaptcha.Checkout.View'
+    ]
 ,   function (
-		RecaptchaLoginView,
-		RecaptchaRegisterView,
-		RecaptchaCheckoutView
-	)
+        RecaptchaLoader,
+        RecaptchaLoginView,
+        RecaptchaRegisterView,
+        RecaptchaCheckoutView
+    )
 {
-	'use strict';
+    'use strict';
 
-	return  {
-		mountToApp: function mountToApp (container)
-		{
-			var LoginRegisterPage = container.getComponent('LoginRegisterPage');
-			var environment = container.getComponent("Environment");
-			var isactive = environment.getConfig('recaptcha.isactive');
-			var checkout = container.getComponent('Checkout');
-			var layout = container.getComponent('Layout');
-			var self = this;
+    return  {
+        mountToApp: function mountToApp (container)
+        {
+            var LoginRegisterPage = container.getComponent('LoginRegisterPage');
+            var environment = container.getComponent('Environment');
+            var isactive = environment.getConfig('recaptcha.isactive');
+            var checkout = container.getComponent('Checkout');
 
-			if (isactive && LoginRegisterPage) {
-				LoginRegisterPage.addChildView('Login.Recaptcha', function () {
-					return new RecaptchaLoginView({ LoginRegisterPage: LoginRegisterPage, application: container, environment: environment });
-				});
-				LoginRegisterPage.addChildView('Register.Recaptcha', function () {
-					return new RecaptchaRegisterView({ LoginRegisterPage: LoginRegisterPage, application: container, environment: environment });
-				});
-			}
+            if (!isactive) {
+                return;
+            }
 
-			if (isactive && checkout) {
-				checkout.addChildView('Checkout.Recaptcha', function () {
-					return new RecaptchaCheckoutView({ LoginRegisterPage: checkout, application: container, environment: environment });
-				});
-				// layout.addToViewContextDefinition('OrderWizard.Step', 'isReview', 'boolean', function (context) {
-				// 	var isReview = false
-					
-				// 	if (window.location.hash && window.location.hash.indexOf('review') !== -1) {
-				// 		isReview = true;
-				// 	}
-				// 	return isReview
-				// });
-			}
-		}
-	};
+            // Get site key from config
+            var keyList = environment.getConfig('recaptcha.keylist');
+            var siteKey = keyList[0].sitekey;
+            var isVerocious = environment.getConfig('recaptcha.isverocious');
+
+            // Initialize the shared loader with site key (loads NOTHING yet)
+            RecaptchaLoader.initialize(siteKey);
+
+            if (LoginRegisterPage) {
+                LoginRegisterPage.addChildView('Login.Recaptcha', function () {
+                    return new RecaptchaLoginView({
+                        LoginRegisterPage: LoginRegisterPage,
+                        application: container,
+                        environment: environment,
+                        isVerocious: isVerocious
+                    });
+                });
+                LoginRegisterPage.addChildView('Register.Recaptcha', function () {
+                    return new RecaptchaRegisterView({
+                        LoginRegisterPage: LoginRegisterPage,
+                        application: container,
+                        environment: environment,
+                        isVerocious: isVerocious
+                    });
+                });
+            }
+
+            if (checkout) {
+                checkout.addChildView('Checkout.Recaptcha', function () {
+                    return new RecaptchaCheckoutView({
+                        LoginRegisterPage: checkout,
+                        application: container,
+                        environment: environment,
+                        isVerocious: isVerocious
+                    });
+                });
+            }
+        }
+    };
 });
-
 
 };
 
-SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","OrderWizard.Module.CleanShipMethod","PacejetIntegration.Session.Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model","BluePoint.ReCaptcha.ReCaptcha.SS2Model","BluePoint.ReCaptcha.ReCaptcha.Login.View","BluePoint.ReCaptcha.Recaptcha.Register.View","BluePoint.ReCaptcha.ReCaptcha.Checkout.View"];
+SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","OrderWizard.Module.CleanShipMethod","PacejetIntegration.Session.Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model","BluePoint.ReCaptcha.Loader","BluePoint.ReCaptcha.ReCaptcha.SS2Model","BluePoint.ReCaptcha.ReCaptcha.Login.View","BluePoint.ReCaptcha.Recaptcha.Register.View","BluePoint.ReCaptcha.ReCaptcha.Checkout.View"];
 try{
 	extensions['OmniFunnelMarketing.CanonicalFix.1.0.0']();
 	SC.addExtensionModule('default.CanonicalFix.CanonicalFix');

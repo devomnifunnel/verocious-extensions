@@ -1,64 +1,67 @@
 define('BluePoint.ReCaptcha.ReCaptcha.Login.View', [
-	'bp_recaptcha_recaptcha_login.tpl'
-,	'jQuery'
-,	'Backbone'
-,	'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+    'bp_recaptcha_recaptcha_login.tpl'
+,   'jQuery'
+,   'Backbone'
+,   'BluePoint.ReCaptcha.Loader'
+,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
 ], function (
-	bp_recaptcha_recaptcha_login_tpl
-,	jQuery
-,	Backbone
-,	RecaptchaModel
+    bp_recaptcha_recaptcha_login_tpl
+,   jQuery
+,   Backbone
+,   RecaptchaLoader
+,   RecaptchaModel
 ) {
-	'use strict';
+    'use strict';
 
-	return Backbone.View.extend({
+    return Backbone.View.extend({
 
-		template: bp_recaptcha_recaptcha_login_tpl,
+        template: bp_recaptcha_recaptcha_login_tpl,
 
-		initialize: function (options) {
-			var self = this;
-			this.application = options.application;
-			this.environment = options.environment;
-			var keyList = this.environment.getConfig('recaptcha.keylist');
-			var siteKey = keyList[0].sitekey;
-			var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+        initialize: function (options) {
+            var self = this;
+            this.application = options.application;
+            this.isVerocious = options.isVerocious;
 
-			this.recaptchaModel = new RecaptchaModel();
+            this.recaptchaModel = new RecaptchaModel();
 
-			this.options.LoginRegisterPage.on('beforeLogin', function () {
-				var defer = jQuery.Deferred();
+            this.options.LoginRegisterPage.on('beforeLogin', function () {
+                var defer = jQuery.Deferred();
 
-				grecaptcha.ready(function () {
-					grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-						self.$('input[name="g-recaptcha-response"]').val(token);
-						
-						self.recaptchaModel.fetch({
-							data: {
-								'token': token,
-								'isVerocious': isVerocious
-							}
-						}).done(function (response) {
-							if (response.data && response.data.success) {
-								defer.resolve();
-							} else {
-								self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-								defer.reject();
-							}
-						}).fail(function () {
-							defer.reject();
-						});
-					});
-				});
-				return defer.promise();
-			});
-		}
+                // Loader handles loading api.js (once, async) + executing
+                RecaptchaLoader.execute('login')
+                    .then(function (token) {
+                        self.$('input[name="g-recaptcha-response"]').val(token);
 
-		, getContext: function getContext() {
-			var keyList = this.environment.getConfig('recaptcha.keylist');
-			var siteKey = keyList[0].sitekey;
-			return {
-				siteKey: siteKey
-			};
-		}
-	});
+                        return self.recaptchaModel.fetch({
+                            data: {
+                                'token': token,
+                                'isVerocious': self.isVerocious
+                            }
+                        });
+                    })
+                    .then(function (response) {
+                        if (response.data && response.data.success) {
+                            defer.resolve();
+                        } else {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. If you are not a robot then please try again.'
+                            );
+                            defer.reject();
+                        }
+                    })
+                    .fail(function () {
+                        self.application.getLayout().showErrorInModal(
+                            'Captcha validation failed. Please try again.'
+                        );
+                        defer.reject();
+                    });
+
+                return defer.promise();
+            });
+        }
+
+        , getContext: function getContext() {
+            return {};
+        }
+    });
 });

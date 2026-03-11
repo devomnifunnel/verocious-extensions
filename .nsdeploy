@@ -11,9 +11,6 @@
         "target_folder": {
             "parentId": "-15",
             "folderName": "Deploy_Extensions"
-        },
-        "key": "c00dc6941fdf4506f9711b76d701747ac1d65aa8e177a4dcf67ecde1d80cee20",
-        "secret": "cf565cea7e76b64649c279ad95e4001817be3483838b6700e5cd736ea5439ac5",
-        "account": "606473"
+        }
     }
 }
