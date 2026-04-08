@@ -1,0 +1,39 @@
+{
+    "name": "PDPSyncOptimizer",
+    "fantasyName": "PDP Sync Optimizer",
+    "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCS,SCA",
+    "target_version": {
+        "SCS": ">=25.1.0",
+        "SCA": ">=25.1.0"
+    },
+    "description": "Skips the redundant cacheable items API call on PDP pages when preloaded data is available in SC.ENVIRONMENT",
+    "skins": [],
+    "configuration": {
+        "files": [
+            "Modules/PDPSyncOptimizer/Configuration/PDPSyncOptimizer.json"
+        ]
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/PDPSyncOptimizer/JavaScript/OmniFunnelMarketing.PDPSyncOptimizer.PDPSyncOptimizer.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/PDPSyncOptimizer/JavaScript/OmniFunnelMarketing.PDPSyncOptimizer.PDPSyncOptimizer.js"
+                ]
+            }
+        }
+    },
+    "ssp-libraries": {
+        "entry_point": "Modules/PDPSyncOptimizer/SuiteScript/OmniFunnelMarketing.PDPSyncOptimizer.PDPSyncOptimizer.js",
+        "files": [
+            "Modules/PDPSyncOptimizer/SuiteScript/OmniFunnelMarketing.PDPSyncOptimizer.PDPSyncOptimizer.js",
+            "Modules/PDPSyncOptimizer/SuiteScript/PDPSyncOptimizer.ItemPreloader.js"
+        ]
+    },
+    "local_folder": "Workspace/PDPSyncOptimizer"
+}

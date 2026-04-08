@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": { 
+        "BillingAddressOptimization.config": {
+            "group": "extensions",
+            "subtab": "BillingAddressOptimization_subtab",
+            "type": "string",
+            "title": "BillingAddressOptimization_Title",
+            "description": "Config description example",
+            "default": "Default config example"
+        }
+    }
+}

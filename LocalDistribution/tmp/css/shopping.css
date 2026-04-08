@@ -9246,7 +9246,7 @@ html .bx-pager-item img {
 }
 
 /* Edited for Summit Theme */
-.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .cookieconsentclsfix-info-card, .canonicalfix-info-card {
+.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .cookieconsentclsfix-info-card, .canonicalfix-info-card, .billingaddressoptimization-info-card {
   background: white;
   border: none;
   padding: 15px;
@@ -9270,7 +9270,7 @@ html .bx-pager-item img {
   border-style: dashed;
 }
 
-.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .cookieconsentclsfix-info-card-content, .canonicalfix-info-card-content {
+.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .cookieconsentclsfix-info-card-content, .canonicalfix-info-card-content, .billingaddressoptimization-info-card-content {
   margin: 5px 0;
 }
 
@@ -14328,6 +14328,8 @@ a.header-mini-cart-buttons {
   display: table;
   margin-bottom: 20px;
   background-color: darkgray;
+  position: relative;
+  overflow: hidden;
 }
 .home-infoblock:hover, .open .home-infoblock.split-button-toggle, .open .home-infoblock.sc-flyout-control, .open .home-infoblock.social-sharing-flyout-content-button {
   cursor: pointer;
@@ -14347,17 +14349,24 @@ a.header-mini-cart-buttons {
     height: 200px;
   }
 }
-@media (max-width: 768px) {
-  .home-infoblock {
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
+
+.home-infoblock-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
 }
 
 .home-infoblock-content {
   display: table-cell;
   vertical-align: middle;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 @media (min-width: 768px) {
   .home-infoblock-content {
@@ -20779,6 +20788,19 @@ Default merchandising template styling merchzone_default.txt
 	@import "other-sass-file.scss";
 	@import "../../<other module>/Sass/other-sass-file.scss";
 */
+.billingaddressoptimization-info-card-content {
+  color: #4f88b0;
+  font-weight: bold;
+}
+
+/*
+	Sass Application Entry Point
+	Link all your sass dependencies in the right order
+
+	Example:
+	@import "other-sass-file.scss";
+	@import "../../<other module>/Sass/other-sass-file.scss";
+*/
 .canonicalfix-info-card-content {
   color: #4f88b0;
   font-weight: bold;
@@ -20826,14 +20848,6 @@ Default merchandising template styling merchzone_default.txt
   width: 100% !important;
   z-index: 10000 !important;
   contain: layout !important;
-}
-
-.needsclick.kl-teaser-UnVkce.kl-private-reset-css-Xuajs1 {
-  margin-bottom: 75px !important;
-}
-
-.needsclick.kl-teaser-WqDay9.kl-private-reset-css-Xuajs1 {
-  margin-bottom: 75px !important;
 }
 
 .needsclick.kl-teaser-UnVkce.kl-private-reset-css-Xuajs1 {

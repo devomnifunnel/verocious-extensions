@@ -26,7 +26,7 @@ define('NSeComm.HideInvoiceOption.Main', [
             if (checkout) {
                 checkout.on('afterShowContent', function afterShowContent() {
                     checkout.getCurrentStep().then(function then(step) {
-                        if (step.url === 'billing') {
+                        if (step.url === 'billing' || step.url === 'opc') {
                             userProfile.getUserProfile().then(function check(profile) {
                                 if (_.find(termsToHideInvoice, function findTerm(termObj) {
                                     return parseInt(termObj.term, 10) === parseInt(profile.paymentterms.internalid, 10);

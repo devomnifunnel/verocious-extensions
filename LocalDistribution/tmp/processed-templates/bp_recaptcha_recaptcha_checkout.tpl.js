@@ -1,7 +1,3 @@
 define('bp_recaptcha_recaptcha_checkout.tpl', ['Handlebars','Handlebars.CompilerNameLookup'], function (Handlebars, compilerNameLookup){ var t = {"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return "<!-- Removed reCAPTCHA widget div -->\n<input type=\"hidden\" name=\"g-recaptcha-response\">\n\n<script src=\"https://www.google.com/recaptcha/api.js?render="
-    + container.escapeExpression(((helper = (helper = compilerNameLookup(helpers,"siteKey") || (depth0 != null ? compilerNameLookup(depth0,"siteKey") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"siteKey","hash":{},"data":data,"loc":{"start":{"line":4,"column":60},"end":{"line":4,"column":71}}}) : helper)))
-    + "\"></script>\n";
+    return "<input type=\"hidden\" name=\"g-recaptcha-response\">";
 },"useData":true}; var main = t.main; t.main = function(){ arguments[1] = arguments[1] || {}; var ctx = arguments[1]; ctx._extension_path = 'http://localhost:7777/tmp/extensions/BluePoint/ReCaptcha/1.0.0/'; ctx._theme_path = 'http://localhost:7777/tmp/extensions/BluePoint/Summit/4.0.0/'; return main.apply(this, arguments); }; var template = Handlebars.template(t); template.Name = 'bp_recaptcha_recaptcha_checkout'; return template;});

@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "PDPSyncOptimizer.enabled": {
+            "group": "extensions",
+            "subtab": "PDPSyncOptimizer_subtab",
+            "type": "boolean",
+            "title": "Enable PDP Sync Optimizer",
+            "description": "When enabled, skips the cacheable items API call on PDP pages if preloaded data is available in SC.ENVIRONMENT",
+            "default": true
+        },
+        "PDPSyncOptimizer.debug": {
+            "group": "extensions",
+            "subtab": "PDPSyncOptimizer_subtab",
+            "type": "boolean",
+            "title": "Debug Mode",
+            "description": "Logs sync skip decisions to the browser console for troubleshooting",
+            "default": false
+        }
+    }
+}

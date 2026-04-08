@@ -1,5 +1,394 @@
 var extensions = {};
 
+extensions['OmniFunnelMarketing.BillingAddressOptimization.1.0.0'] = function(){
+
+function getExtensionAssetsPath(asset){
+	return 'extensions/OmniFunnelMarketing/BillingAddressOptimization/1.0.0/' + asset;
+}
+
+// @module OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization
+define('OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View'
+,	[
+	'omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization.tpl'
+	
+	,	'OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model'
+	
+	,	'Backbone'
+    ]
+, function (
+	omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization_tpl
+	
+	,	BillingAddressOptimizationSS2Model
+	
+	,	Backbone
+)
+{
+    'use strict';
+
+	// @class OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View @extends Backbone.View
+	return Backbone.View.extend({
+
+		template: omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization_tpl
+
+	,	initialize: function (options) {
+
+			/*  Uncomment to test backend communication with an example service
+				(you'll need to deploy and activate the extension first)
+			*/
+
+			// this.model = new BillingAddressOptimizationModel();
+			// var self = this;
+         	// this.model.fetch().done(function(result) {
+			// 	self.message = result.message;
+			// 	self.render();
+      		// });
+		}
+
+	,	events: {
+		}
+
+	,	bindings: {
+		}
+
+	, 	childViews: {
+
+		}
+
+		//@method getContext @return OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View.Context
+	,	getContext: function getContext()
+		{
+			//@class OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View.Context
+			this.message = this.message || 'Hello World!!'
+			return {
+				message: this.message
+			};
+		}
+	});
+});
+
+
+// Model.js
+// -----------------------
+// @module Case
+define("OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model", ["Backbone", "Utils"], function(
+    Backbone,
+    Utils
+) {
+    "use strict";
+
+    // @class Case.Fields.Model @extends Backbone.Model
+    return Backbone.Model.extend({
+        //@property {String} urlRoot
+        urlRoot: Utils.getAbsoluteUrl(
+            getExtensionAssetsPath(
+                "Modules/BillingAddressOptimization/SuiteScript2/BillingAddressOptimization.Service.ss"
+            ),
+            true
+        )
+});
+});
+
+
+define(
+    'OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization'
+,   [
+        'jQuery',
+        'Backbone'
+    ]
+,   function (
+        jQuery,
+        Backbone
+    )
+{
+    'use strict';
+
+    return {
+        mountToApp: function mountToApp(container)
+        {
+            function initBillingOptimization() {
+                
+                var userUnchecked = false;
+                var isInitialized = false;
+                
+                // Add CSS to force hide
+                function addForceHideCSS() {
+                    if (!jQuery('#billing-sameas-style').length) {
+                        jQuery('head').append(
+                            '<style id="billing-sameas-style">' +
+                            '.billing-form-force-hide { display: none !important; }' +
+                            '</style>'
+                        );
+                    }
+                }
+                
+                // Check if we're showing address list or new address form
+                function isSavedAddressView() {
+                    return jQuery('[data-manage="billaddress"] .order-wizard-address-module-list-placeholder').length > 0;
+                }
+                
+                function isNewAddressFormView() {
+                    return jQuery('[data-manage="billaddress"] .order-wizard-address-module-form-placeholder').length > 0;
+                }
+                
+                // --- NEW ADDRESS FORM FUNCTIONS ---
+                
+                var fieldMap = {
+                    'fullname': 'fullname',
+                    'company': 'company',
+                    'addr1': 'addr1',
+                    'addr2': 'addr2',
+                    'city': 'city',
+                    'country': 'country',
+                    'state': 'state',
+                    'zip': 'zip',
+                    'phone': 'phone',
+                    'isresidential': 'isresidential'
+                };
+                
+                function getShippingField(fieldName) {
+                    return jQuery('#shipaddress-' + fieldName + ', [name="' + fieldName + '"]').filter(function() {
+                        return this.id && this.id.startsWith('shipaddress');
+                    }).first();
+                }
+                
+                function getBillingField(fieldName) {
+                    return jQuery('#billaddress-' + fieldName + ', [name="' + fieldName + '"]').filter(function() {
+                        return this.id && this.id.startsWith('billaddress');
+                    }).first();
+                }
+                
+                function copyFieldValue(fieldName) {
+                    var $shipField = getShippingField(fieldName);
+                    var $billField = getBillingField(fieldName);
+                    
+                    if ($shipField.length && $billField.length) {
+                        if ($shipField.is(':checkbox')) {
+                            $billField.prop('checked', $shipField.is(':checked'));
+                        } else {
+                            $billField.val($shipField.val()).trigger('change');
+                        }
+                    }
+                }
+                
+                function copyAllFields() {
+                    Object.keys(fieldMap).forEach(function(fieldName) {
+                        copyFieldValue(fieldName);
+                    });
+                }
+                
+                function clearAllBillingFields() {
+                    Object.keys(fieldMap).forEach(function(fieldName) {
+                        var $billField = getBillingField(fieldName);
+                        if ($billField.length) {
+                            if ($billField.is(':checkbox')) {
+                                $billField.prop('checked', false);
+                            } else {
+                                $billField.val('').trigger('change');
+                            }
+                        }
+                    });
+                }
+                
+                function bindShippingFieldListeners() {
+                    Object.keys(fieldMap).forEach(function(fieldName) {
+                        var $shipField = getShippingField(fieldName);
+                        
+                        if ($shipField.length) {
+                            $shipField.off('keyup.sameas change.sameas blur.sameas').on('keyup.sameas change.sameas blur.sameas', function() {
+                                if (!userUnchecked && isNewAddressFormView()) {
+                                    copyFieldValue(fieldName);
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                // --- SAVED ADDRESS LIST FUNCTIONS ---
+                
+                function getSelectedShippingAddressId() {
+                    var $selected = jQuery('[data-manage="shipaddress"] input[name="address-options-shipaddress"]:checked');
+                    return $selected.val() || $selected.data('id');
+                }
+                
+                function selectBillingAddress(addressId) {
+                    var $billingRadio = jQuery('[data-manage="billaddress"] input[value="' + addressId + '"]');
+                    if ($billingRadio.length) {
+                        $billingRadio.prop('checked', true).trigger('click');
+                    }
+                }
+                
+                function bindShippingAddressSelection() {
+                    jQuery('[data-manage="shipaddress"] input[name="address-options-shipaddress"]').off('change.sameas').on('change.sameas', function() {
+                        if (!userUnchecked && isSavedAddressView()) {
+                            var selectedId = jQuery(this).val() || jQuery(this).data('id');
+                            if (selectedId) {
+                                selectBillingAddress(selectedId);
+                            }
+                        }
+                    });
+                }
+                
+                // --- COMMON FUNCTIONS ---
+                
+                function hideBillingContainer() {
+                    var $billingContainer = jQuery('[data-manage="billaddress"]').closest('.order-wizard-address-module-list-placeholder, .order-wizard-address-module-form-placeholder');
+                    $billingContainer.addClass('billing-form-force-hide');
+                }
+                
+                function showBillingContainer() {
+                    var $billingContainer = jQuery('[data-manage="billaddress"]').closest('.order-wizard-address-module-list-placeholder, .order-wizard-address-module-form-placeholder');
+                    $billingContainer.removeClass('billing-form-force-hide');
+                }
+                
+                function setupCheckboxHandler() {
+                    var $checkbox = jQuery('[data-action="same-as"]');
+                    
+                    if (!$checkbox.length) {
+                        return;
+                    }
+                    
+                    $checkbox.off('change.custom');
+                    
+                    $checkbox.on('change.custom', function() {
+                        var isChecked = jQuery(this).is(':checked');
+                        
+                        if (isChecked) {
+                            // CHECKED: Hide container and sync
+                            userUnchecked = false;
+                            
+                            if (isSavedAddressView()) {
+                                // Match shipping address selection
+                                var shipAddressId = getSelectedShippingAddressId();
+                                if (shipAddressId) {
+                                    selectBillingAddress(shipAddressId);
+                                }
+                                bindShippingAddressSelection();
+                            } else if (isNewAddressFormView()) {
+                                // Copy form fields
+                                copyAllFields();
+                                bindShippingFieldListeners();
+                            }
+                            
+                            hideBillingContainer();
+                            
+                        } else {
+                            // UNCHECKED: Show container and clear
+                            userUnchecked = true;
+                            
+                            if (isNewAddressFormView()) {
+                                clearAllBillingFields();
+                                Object.keys(fieldMap).forEach(function(fieldName) {
+                                    getShippingField(fieldName).off('keyup.sameas change.sameas blur.sameas');
+                                });
+                            }
+                            
+                            showBillingContainer();
+                        }
+                    });
+                }
+                
+                function applyBillingDefaults() {
+                    var $checkbox = jQuery('[data-action="same-as"]');
+                    
+                    if (!$checkbox.length) {
+                        return;
+                    }
+                    
+                    addForceHideCSS();
+                    
+                    $checkbox.prop('disabled', false);
+                    
+                    if (!isInitialized || !userUnchecked) {
+                        $checkbox.prop('checked', true);
+                        hideBillingContainer();
+                        
+                        if (isSavedAddressView()) {
+                            // Match shipping address
+                            var shipAddressId = getSelectedShippingAddressId();
+                            if (shipAddressId) {
+                                selectBillingAddress(shipAddressId);
+                            }
+                            bindShippingAddressSelection();
+                        } else if (isNewAddressFormView()) {
+                            // Don't copy yet, wait for user input
+                            bindShippingFieldListeners();
+                        }
+                    } else {
+                        $checkbox.prop('checked', false);
+                        
+                        if (isNewAddressFormView()) {
+                            clearAllBillingFields();
+                        }
+                        
+                        showBillingContainer();
+                    }
+                    
+                    setupCheckboxHandler();
+                    
+                    isInitialized = true;
+                }
+                
+                // Apply immediately
+                applyBillingDefaults();
+                
+                // Watch for re-renders
+                var observer = new MutationObserver(function(mutations) {
+                    var billingContainerAdded = false;
+                    
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length) {
+                            for (var i = 0; i < mutation.addedNodes.length; i++) {
+                                var node = mutation.addedNodes[i];
+                                if (node.nodeType === 1) {
+                                    if (node.querySelector && node.querySelector('[data-manage="billaddress"]')) {
+                                        billingContainerAdded = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                    if (billingContainerAdded) {
+                        setTimeout(applyBillingDefaults, 100);
+                    }
+                });
+                
+                var targetNode = document.querySelector('.order-wizard-step-content-wrapper');
+                if (targetNode) {
+                    observer.observe(targetNode, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
+            }
+            
+            if (typeof jQuery !== 'undefined') {
+                jQuery(document).ready(function() {
+                    setTimeout(initBillingOptimization, 1000);
+                });
+            } else {
+                if (document.readyState === 'complete') {
+                    setTimeout(initBillingOptimization, 1000);
+                } else {
+                    window.addEventListener('load', function() {
+                        setTimeout(initBillingOptimization, 1000);
+                    });
+                }
+            }
+            
+            if (typeof Backbone !== 'undefined' && Backbone.history) {
+                Backbone.history.on('route', function() {
+                    setTimeout(initBillingOptimization, 1000);
+                });
+            }
+        }
+    };
+});
+
+
+};
+
 extensions['OmniFunnelMarketing.CanonicalFix.1.0.0'] = function(){
 
 function getExtensionAssetsPath(asset){
@@ -366,7 +755,7 @@ define('NSeComm.HideInvoiceOption.Main', [
             if (checkout) {
                 checkout.on('afterShowContent', function afterShowContent() {
                     checkout.getCurrentStep().then(function then(step) {
-                        if (step.url === 'billing') {
+                        if (step.url === 'billing' || step.url === 'opc') {
                             userProfile.getUserProfile().then(function check(profile) {
                                 if (_.find(termsToHideInvoice, function findTerm(termObj) {
                                     return parseInt(termObj.term, 10) === parseInt(profile.paymentterms.internalid, 10);
@@ -374,136 +763,6 @@ define('NSeComm.HideInvoiceOption.Main', [
                                     jQuery('[data-action="change-payment-method"] [value="creditcard"]').click();
                                     addAdditionalStyles();
                                 }
-                            });
-                        }
-                    });
-                });
-            }
-        }
-    };
-});
-
-
-};
-
-extensions['NSeComm.Klaviyo.1.0.0'] = function(){
-
-function getExtensionAssetsPath(asset){
-	return 'extensions/NSeComm/Klaviyo/1.0.0/' + asset;
-}
-
-/*
-    © 2024 NetSuite Inc.
-    User may not copy, modify, distribute, or re-bundle or otherwise make available this code;
-    provided, however, if you are an authorized user with a NetSuite account or log-in, you
-    may use this code subject to the terms that govern your access and use.
-*/
-/* globals klaviyo */
-define('NSeComm.Klaviyo.Main', [
-    'jQuery',
-    'underscore'
-], function NSeCommKlaviyoMain(
-    jQuery,
-    _
-) {
-    'use strict';
-
-    return {
-
-        getItems: function getItems(lines) {
-            var result = {};
-            var itemObj;
-            result.itemNames = [];
-            result.items = [];
-
-            _.each(lines, function eachLine(line) {
-                result.itemNames.push(line.item.extras.storedisplayname2);
-
-                itemObj = {};
-                itemObj.ProductID = line.item.internalid;
-                itemObj.SKU = line.item.itemid;
-                itemObj.ProductName = line.item.extras.storedisplayname2;
-                itemObj.Quantity = line.quantity;
-                itemObj.ItemPrice = line.rate;
-                itemObj.RowTotal = line.amount;
-                itemObj.ProductURL = line.item.extras.keyMapping_url;
-                itemObj.ImageURL = line.item.extras.keyMapping_thumbnail.url;
-
-                result.items.push(itemObj);
-            });
-
-            return result;
-        },
-
-        mountToApp: function mountToApp(container) {
-            var environment = container.getComponent('Environment');
-            var layout = container.getComponent('Layout');
-            var checkout = container.getComponent('Checkout');
-            var cart = container.getComponent('Cart');
-            var klaviyoUrl = environment.getConfig('klaviyo.url');
-            var customerCategory = environment.getConfig('klaviyo.customerCategory');
-            var item;
-            var klaviyoTracker;
-            var self = this;
-            var orderInfo = {};
-            var itemsInfo = {};
-
-            if (environment.isPageGenerator()) {
-                return;
-            }
-
-            klaviyoTracker = {
-                trackProductView: function trackProductView(line) {
-                    item = {
-                        'ProductName': line.name,
-                        'ProductID': line.internalId,
-                        'SKU': line.sku,
-                        'ImageURL': line.thumbnail,
-                        'URL': line.urlComponent,
-                        'Price': line.price
-                    };
-                    klaviyo.push(['track', 'Viewed Product', item]);
-                }
-            };
-
-            if (layout) {
-                jQuery('body').on('change', '#cct_netsuite_newsletter', function onNewsletterChange() {
-                    jQuery('.newslettercct-submit').on('click', function sendInfoToKlaviyo() {
-                        var firstName = jQuery('.newslettercct-container [name="firstName"]').val();
-                        var lastName = jQuery('.newslettercct-container [name="lastName"]').val();
-                        var email = jQuery('.newslettercct-container [name="email"]').val();
-
-                        if (firstName && lastName && email) {
-                            klaviyo.push(['track', 'Subscribed to Email Marketing', {
-                                email: email,
-                                firstName: firstName,
-                                lastName: lastName,
-                                customerCategory: customerCategory
-                            }]);
-                        }
-                    });
-                });
-            }
-
-            jQuery.getScript(klaviyoUrl).done(function pushKlaviyo() {
-                environment.addTracker(klaviyoTracker);
-            });
-
-            if (checkout) {
-                checkout.on('afterShowContent', function addKlaviyoEvent() {
-                    checkout.getCurrentStep().then(function validateStep(step) {
-                        if (step.step_group_name === 'Shipping Address') {
-                            cart.getLines().then(function sendKlaviyoInformation(lines) {
-                                self.lines = lines;
-                                cart.getSummary().then(function getSummary(summary) {
-                                    orderInfo.$value = summary.total;
-                                    orderInfo.CheckoutURL = window.location.href;
-                                    itemsInfo = self.getItems(self.lines);
-                                    orderInfo.ItemNames = itemsInfo.itemNames;
-                                    orderInfo.Items = itemsInfo.items;
-
-                                    klaviyo.push(['track', 'Started Checkout', orderInfo]);
-                                });
                             });
                         }
                     });
@@ -1057,6 +1316,13 @@ define('NSeComm.PacejetIntegration.Main', [
             var pacejetTemporalStateModel = new PacejetIntegrationSessionModel();
 
             if (checkout) {
+                var isLoggedIn = false;
+                try {
+                    var ProfileModel = require('Profile.Model');
+                    var profile = ProfileModel.getInstance();
+                    isLoggedIn = profile.get('isLoggedIn') === 'T' || profile.get('isGuest') === 'T';
+                } catch (ignore) {}
+
                 checkout.addToViewContextDefinition('OrderWizard.Module.Shipmethod', 'shippingMethods', 'array', function refreshDeliveryDates(context) {
                     // View context strips custom properties, so look up isFreeShipping from the model
                     var LiveOrderModel = require('LiveOrder.Model');
@@ -1107,22 +1373,30 @@ define('NSeComm.PacejetIntegration.Main', [
 
                 jQuery('body').on('change', '#shipaddress-state[name="state"]', function onStateChange(e) {
                     pacejetTemporalStateModel.set('state', e.target.value);
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
 
                 jQuery('body').on('change', '#shipaddresscountry[name="country"]', function onCountryChange() {
                     pacejetTemporalStateModel.set('state', '');
                     pacejetTemporalStateModel.set('city', '');
                     pacejetTemporalStateModel.set('addr1', '');
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
                 jQuery('body').on('change', '#shipaddress-city[name="city"]', function onCityChange(e) {
                     pacejetTemporalStateModel.set('city', e.target.value);
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
                 jQuery('body').on('change', '#shipaddress-addr1[name="addr1"]', function onCityChange(e) {
                     pacejetTemporalStateModel.set('addr1', e.target.value);
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
             }
         }
@@ -1448,6 +1722,100 @@ function getExtensionAssetsPath(asset){
 	return 'extensions/BluePoint/ReCaptcha/1.0.0/' + asset;
 }
 
+define('BluePoint.ReCaptcha.Loader', [
+    'jQuery'
+], function (jQuery) {
+    'use strict';
+
+    var _siteKey = null;
+    var _loadPromise = null;
+    var _isLoaded = false;
+
+    return {
+
+        /**
+         * Store the site key (does NOT load anything yet)
+         * @param {string} siteKey
+         */
+        initialize: function initialize(siteKey) {
+            _siteKey = siteKey;
+        },
+
+        /**
+         * Load api.js ONCE, asynchronously
+         * Returns a promise that resolves when grecaptcha is ready
+         * Safe to call multiple times - only loads once
+         * @returns {jQuery.Deferred.promise}
+         */
+        load: function load() {
+            // If already loading or loaded, return existing promise
+            if (_loadPromise) {
+                return _loadPromise;
+            }
+
+            var deferred = jQuery.Deferred();
+            _loadPromise = deferred.promise();
+
+            // Create script element with async attribute
+            var script = document.createElement('script');
+            script.src = 'https://www.google.com/recaptcha/api.js?render=' + _siteKey;
+            script.async = true;
+            script.defer = true;
+
+            script.onload = function onApiLoaded() {
+                // Wait for grecaptcha to be fully ready
+                grecaptcha.ready(function onGrecaptchaReady() {
+                    _isLoaded = true;
+                    console.log('[ReCaptcha Loader] api.js loaded and ready (single instance).');
+                    deferred.resolve(grecaptcha);
+                });
+            };
+
+            script.onerror = function onApiError() {
+                console.error('[ReCaptcha Loader] Failed to load api.js');
+                _loadPromise = null; // Allow retry on next call
+                deferred.reject(new Error('Failed to load reCAPTCHA api.js'));
+            };
+
+            document.head.appendChild(script);
+            console.log('[ReCaptcha Loader] Loading api.js asynchronously...');
+
+            return _loadPromise;
+        },
+
+        /**
+         * Load (if needed) then execute reCAPTCHA and return a token
+         * This is what the views call on form submit
+         * @param {string} [action='login'] - reCAPTCHA action name
+         * @returns {jQuery.Deferred.promise} Resolves with token string
+         */
+        execute: function execute(action) {
+            return this.load().then(function onReady(grecaptcha) {
+                return grecaptcha.execute(_siteKey, {
+                    action: action || 'login'
+                });
+            });
+        },
+
+        /**
+         * Check if reCAPTCHA has loaded
+         * @returns {boolean}
+         */
+        isLoaded: function isLoaded() {
+            return _isLoaded;
+        },
+
+        /**
+         * Get the site key
+         * @returns {string}
+         */
+        getSiteKey: function getSiteKey() {
+            return _siteKey;
+        }
+    };
+});
+
+
 // Model.js
 // -----------------------
 // @module Case
@@ -1471,264 +1839,299 @@ define("BluePoint.ReCaptcha.ReCaptcha.SS2Model", ["Backbone", "Utils"], function
 
 
 define('BluePoint.ReCaptcha.ReCaptcha.Login.View', [
-	'bp_recaptcha_recaptcha_login.tpl'
-,	'jQuery'
-,	'Backbone'
-,	'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+    'bp_recaptcha_recaptcha_login.tpl'
+,   'jQuery'
+,   'Backbone'
+,   'BluePoint.ReCaptcha.Loader'
+,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
 ], function (
-	bp_recaptcha_recaptcha_login_tpl
-,	jQuery
-,	Backbone
-,	RecaptchaModel
+    bp_recaptcha_recaptcha_login_tpl
+,   jQuery
+,   Backbone
+,   RecaptchaLoader
+,   RecaptchaModel
 ) {
-	'use strict';
+    'use strict';
 
-	return Backbone.View.extend({
+    return Backbone.View.extend({
 
-		template: bp_recaptcha_recaptcha_login_tpl,
+        template: bp_recaptcha_recaptcha_login_tpl,
 
-		initialize: function (options) {
-			var self = this;
-			this.application = options.application;
-			this.environment = options.environment;
-			var keyList = this.environment.getConfig('recaptcha.keylist');
-			var siteKey = keyList[0].sitekey;
-			var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+        initialize: function (options) {
+            var self = this;
+            this.application = options.application;
+            this.isVerocious = options.isVerocious;
 
-			this.recaptchaModel = new RecaptchaModel();
+            this.recaptchaModel = new RecaptchaModel();
 
-			this.options.LoginRegisterPage.on('beforeLogin', function () {
-				var defer = jQuery.Deferred();
+            this.options.LoginRegisterPage.on('beforeLogin', function () {
+                var defer = jQuery.Deferred();
 
-				grecaptcha.ready(function () {
-					grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-						self.$('input[name="g-recaptcha-response"]').val(token);
-						
-						self.recaptchaModel.fetch({
-							data: {
-								'token': token,
-								'isVerocious': isVerocious
-							}
-						}).done(function (response) {
-							if (response.data && response.data.success) {
-								defer.resolve();
-							} else {
-								self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-								defer.reject();
-							}
-						}).fail(function () {
-							defer.reject();
-						});
-					});
-				});
-				return defer.promise();
-			});
-		}
+                // Loader handles loading api.js (once, async) + executing
+                RecaptchaLoader.execute('login')
+                    .then(function (token) {
+                        self.$('input[name="g-recaptcha-response"]').val(token);
 
-		, getContext: function getContext() {
-			var keyList = this.environment.getConfig('recaptcha.keylist');
-			var siteKey = keyList[0].sitekey;
-			return {
-				siteKey: siteKey
-			};
-		}
-	});
+                        return self.recaptchaModel.fetch({
+                            data: {
+                                'token': token,
+                                'isVerocious': self.isVerocious
+                            }
+                        });
+                    })
+                    .then(function (response) {
+                        if (response.data && response.data.success) {
+                            defer.resolve();
+                        } else {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. If you are not a robot then please try again.'
+                            );
+                            defer.reject();
+                        }
+                    })
+                    .fail(function () {
+                        self.application.getLayout().showErrorInModal(
+                            'Captcha validation failed. Please try again.'
+                        );
+                        defer.reject();
+                    });
+
+                return defer.promise();
+            });
+        }
+
+        , getContext: function getContext() {
+            return {};
+        }
+    });
 });
 
 
 define('BluePoint.ReCaptcha.Recaptcha.Register.View'
-	, [
-		'bp_recaptcha_recaptcha_register.tpl'
-	, 	'jQuery'
-	, 	'Backbone'
-	, 	'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
-	]
-	, function (
-		bp_recaptcha_recaptcha_register_tpl
-	, 	jQuery
-	, 	Backbone
-	, 	RecaptchaModel
-	) {
-		'use strict';
+,   [
+        'bp_recaptcha_recaptcha_register.tpl'
+    ,   'jQuery'
+    ,   'Backbone'
+    ,   'BluePoint.ReCaptcha.Loader'
+    ,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+    ]
+,   function (
+        bp_recaptcha_recaptcha_register_tpl
+    ,   jQuery
+    ,   Backbone
+    ,   RecaptchaLoader
+    ,   RecaptchaModel
+    ) {
+        'use strict';
 
-		// @class WB.GoogleRecaptchaApruvd.Recaptcha.View @extends Backbone.View
-		return Backbone.View.extend({
+        return Backbone.View.extend({
 
-			template: bp_recaptcha_recaptcha_register_tpl,
+            template: bp_recaptcha_recaptcha_register_tpl,
 
-			initialize: function (options) {
-				var self = this;
-				this.application = options.application;
-				this.environment = options.environment;
-				var keyList = this.environment.getConfig('recaptcha.keylist');
-				var siteKey = keyList[0].sitekey;
-				var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+            initialize: function (options) {
+                var self = this;
+                this.application = options.application;
+                this.isVerocious = options.isVerocious;
 
-				this.recaptchaModel = new RecaptchaModel();
+                this.recaptchaModel = new RecaptchaModel();
 
-				this.options.LoginRegisterPage.on('beforeRegister', function () {
-					var defer = jQuery.Deferred();
+                this.options.LoginRegisterPage.on('beforeRegister', function () {
+                    var defer = jQuery.Deferred();
 
-					grecaptcha.ready(function () {
-						grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-							self.$('input[name="g-recaptcha-response-register"]').val(token);
-							self.recaptchaModel.fetch({
-								data: {
-									'token': token,
-									'isVerocious': isVerocious
-								}
-							}).done(function (response) {
-								if (response.data && response.data.success) {
-									defer.resolve();
-								} else {
-									self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-									defer.reject();
-								}
-							}).fail(function () {
-								defer.reject();
-							});
-						});
-					});
-					return defer.promise();
-				});
-			}
+                    RecaptchaLoader.execute('login')
+                        .then(function (token) {
+                            self.$('input[name="g-recaptcha-response-register"]').val(token);
 
-			, getContext: function getContext() {
-				var keyList = this.environment.getConfig('recaptcha.keylist');
-				var siteKey = keyList[0].sitekey;
-				return {
-					siteKey: siteKey
-				};
-			}
-		});
-	});
+                            return self.recaptchaModel.fetch({
+                                data: {
+                                    'token': token,
+                                    'isVerocious': self.isVerocious
+                                }
+                            });
+                        })
+                        .then(function (response) {
+                            if (response.data && response.data.success) {
+                                defer.resolve();
+                            } else {
+                                self.application.getLayout().showErrorInModal(
+                                    'Captcha validation failed. If you are not a robot then please try again.'
+                                );
+                                defer.reject();
+                            }
+                        })
+                        .fail(function () {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. Please try again.'
+                            );
+                            defer.reject();
+                        });
+
+                    return defer.promise();
+                });
+            }
+
+            , getContext: function getContext() {
+                return {};
+            }
+        });
+    });
 
 
 define('BluePoint.ReCaptcha.ReCaptcha.Checkout.View', [
     'bp_recaptcha_recaptcha_checkout.tpl'
-  , 'jQuery'
-  , 'Backbone'
-  , 'LiveOrder.Model'
-  , 'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
+,   'jQuery'
+,   'Backbone'
+,   'LiveOrder.Model'
+,   'BluePoint.ReCaptcha.Loader'
+,   'BluePoint.ReCaptcha.ReCaptcha.SS2Model'
 ]
-  , function (
-      bp_recaptcha_recaptcha_checkout_tpl
-    , jQuery
-    , Backbone
-    , LiveOrderModel
-    , RecaptchaModel
-  ) {
-    'use strict';
+,   function (
+        bp_recaptcha_recaptcha_checkout_tpl
+    ,   jQuery
+    ,   Backbone
+    ,   LiveOrderModel
+    ,   RecaptchaLoader
+    ,   RecaptchaModel
+    ) {
+        'use strict';
 
-    // @class Recaptcha.Checkout.View @extends Backbone.View
-    return Backbone.View.extend({
+        return Backbone.View.extend({
 
-      template: bp_recaptcha_recaptcha_checkout_tpl
+            template: bp_recaptcha_recaptcha_checkout_tpl,
 
-      , initialize: function (options) {
-        var self = this;
-        this.application = options.application;
-        this.environment = options.environment;
-        var keyList = this.environment.getConfig('recaptcha.keylist');
-        var siteKey = keyList[0].sitekey;
-        var isVerocious = this.environment.getConfig('recaptcha.isverocious');
+            initialize: function (options) {
+                var self = this;
+                this.application = options.application;
+                this.isVerocious = options.isVerocious;
 
-        this.recaptchaModel = new RecaptchaModel();
-        var liveOrderInstance = LiveOrderModel.getInstance();
+                this.recaptchaModel = new RecaptchaModel();
+                var liveOrderInstance = LiveOrderModel.getInstance();
 
-        liveOrderInstance.cancelableOn('before:LiveOrder.submit', function beforeLiveOrderSubmitRecaptchaHandler() {
-          var defer = jQuery.Deferred();
+                liveOrderInstance.cancelableOn('before:LiveOrder.submit', function beforeLiveOrderSubmitRecaptchaHandler() {
+                    var defer = jQuery.Deferred();
 
-          grecaptcha.ready(function () {
-            grecaptcha.execute(siteKey, { action: 'login' }).then(function (token) {
-              self.$('input[name="g-recaptcha-response"]').val(token);
-              self.recaptchaModel.fetch({
-                data: {
-                  'token': token,
-                  'isVerocious': isVerocious
-                }
-              }).done(function (response) {
-                if (response.data && response.data.success) {
-                  defer.resolve();
-                } else {
-                  self.application.getLayout().showErrorInModal('Captcha validation failed. If you are not a robot then please try again.');
-                  defer.reject();
-                }
-              }).fail(function () {
-                defer.reject();
-              });
-            });
-          });
-          return defer.promise();
+                    RecaptchaLoader.execute('login')
+                        .then(function (token) {
+                            self.$('input[name="g-recaptcha-response"]').val(token);
+
+                            return self.recaptchaModel.fetch({
+                                data: {
+                                    'token': token,
+                                    'isVerocious': self.isVerocious
+                                }
+                            });
+                        })
+                        .then(function (response) {
+                            if (response.data && response.data.success) {
+                                defer.resolve();
+                            } else {
+                                self.application.getLayout().showErrorInModal(
+                                    'Captcha validation failed. If you are not a robot then please try again.'
+                                );
+                                defer.reject();
+                            }
+                        })
+                        .fail(function () {
+                            self.application.getLayout().showErrorInModal(
+                                'Captcha validation failed. Please try again.'
+                            );
+                            defer.reject();
+                        });
+
+                    return defer.promise();
+                });
+            }
+
+            , getContext: function getContext() {
+                return {};
+            }
         });
-      }
-
-      , getContext: function getContext() {
-        var keyList = this.environment.getConfig('recaptcha.keylist');
-        var siteKey = keyList[0].sitekey;
-        return {
-          siteKey: siteKey
-        };
-      }
     });
-  });
-
 
 
 define('BluePoint.ReCaptcha.ReCaptcha'
 ,   [
-		'BluePoint.ReCaptcha.ReCaptcha.Login.View',
-		'BluePoint.ReCaptcha.Recaptcha.Register.View',
-		'BluePoint.ReCaptcha.ReCaptcha.Checkout.View'
-	]
+        'BluePoint.ReCaptcha.Loader',
+        'BluePoint.ReCaptcha.ReCaptcha.Login.View',
+        'BluePoint.ReCaptcha.Recaptcha.Register.View',
+        'BluePoint.ReCaptcha.ReCaptcha.Checkout.View'
+    ]
 ,   function (
-		RecaptchaLoginView,
-		RecaptchaRegisterView,
-		RecaptchaCheckoutView
-	)
+        RecaptchaLoader,
+        RecaptchaLoginView,
+        RecaptchaRegisterView,
+        RecaptchaCheckoutView
+    )
 {
-	'use strict';
+    'use strict';
 
-	return  {
-		mountToApp: function mountToApp (container)
-		{
-			var LoginRegisterPage = container.getComponent('LoginRegisterPage');
-			var environment = container.getComponent("Environment");
-			var isactive = environment.getConfig('recaptcha.isactive');
-			var checkout = container.getComponent('Checkout');
-			var layout = container.getComponent('Layout');
-			var self = this;
+    return  {
+        mountToApp: function mountToApp (container)
+        {
+            var LoginRegisterPage = container.getComponent('LoginRegisterPage');
+            var environment = container.getComponent('Environment');
+            var isactive = environment.getConfig('recaptcha.isactive');
+            var checkout = container.getComponent('Checkout');
 
-			if (isactive && LoginRegisterPage) {
-				LoginRegisterPage.addChildView('Login.Recaptcha', function () {
-					return new RecaptchaLoginView({ LoginRegisterPage: LoginRegisterPage, application: container, environment: environment });
-				});
-				LoginRegisterPage.addChildView('Register.Recaptcha', function () {
-					return new RecaptchaRegisterView({ LoginRegisterPage: LoginRegisterPage, application: container, environment: environment });
-				});
-			}
+            if (!isactive) {
+                return;
+            }
 
-			if (isactive && checkout) {
-				checkout.addChildView('Checkout.Recaptcha', function () {
-					return new RecaptchaCheckoutView({ LoginRegisterPage: checkout, application: container, environment: environment });
-				});
-				// layout.addToViewContextDefinition('OrderWizard.Step', 'isReview', 'boolean', function (context) {
-				// 	var isReview = false
-					
-				// 	if (window.location.hash && window.location.hash.indexOf('review') !== -1) {
-				// 		isReview = true;
-				// 	}
-				// 	return isReview
-				// });
-			}
-		}
-	};
+            // Get site key from config
+            var keyList = environment.getConfig('recaptcha.keylist');
+            var siteKey = keyList[0].sitekey;
+            var isVerocious = environment.getConfig('recaptcha.isverocious');
+
+            // Initialize the shared loader with site key (loads NOTHING yet)
+            RecaptchaLoader.initialize(siteKey);
+
+            if (LoginRegisterPage) {
+                LoginRegisterPage.addChildView('Login.Recaptcha', function () {
+                    return new RecaptchaLoginView({
+                        LoginRegisterPage: LoginRegisterPage,
+                        application: container,
+                        environment: environment,
+                        isVerocious: isVerocious
+                    });
+                });
+                LoginRegisterPage.addChildView('Register.Recaptcha', function () {
+                    return new RecaptchaRegisterView({
+                        LoginRegisterPage: LoginRegisterPage,
+                        application: container,
+                        environment: environment,
+                        isVerocious: isVerocious
+                    });
+                });
+            }
+
+            if (checkout) {
+                checkout.addChildView('Checkout.Recaptcha', function () {
+                    return new RecaptchaCheckoutView({
+                        LoginRegisterPage: checkout,
+                        application: container,
+                        environment: environment,
+                        isVerocious: isVerocious
+                    });
+                });
+            }
+        }
+    };
 });
 
 
 };
 
-SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","OrderWizard.Module.CleanShipMethod","PacejetIntegration.Session.Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model","BluePoint.ReCaptcha.ReCaptcha.SS2Model","BluePoint.ReCaptcha.ReCaptcha.Login.View","BluePoint.ReCaptcha.Recaptcha.Register.View","BluePoint.ReCaptcha.ReCaptcha.Checkout.View"];
+SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View","OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model","default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","OrderWizard.Module.CleanShipMethod","PacejetIntegration.Session.Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model","BluePoint.ReCaptcha.Loader","BluePoint.ReCaptcha.ReCaptcha.SS2Model","BluePoint.ReCaptcha.ReCaptcha.Login.View","BluePoint.ReCaptcha.Recaptcha.Register.View","BluePoint.ReCaptcha.ReCaptcha.Checkout.View"];
+try{
+	extensions['OmniFunnelMarketing.BillingAddressOptimization.1.0.0']();
+	SC.addExtensionModule('OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization');
+}
+catch(error)
+{
+	console.error(error);
+}
+
+
 try{
 	extensions['OmniFunnelMarketing.CanonicalFix.1.0.0']();
 	SC.addExtensionModule('default.CanonicalFix.CanonicalFix');
@@ -1742,16 +2145,6 @@ catch(error)
 try{
 	extensions['NSeComm.HideInvoiceOption.1.0.0']();
 	SC.addExtensionModule('NSeComm.HideInvoiceOption.Main');
-}
-catch(error)
-{
-	console.error(error);
-}
-
-
-try{
-	extensions['NSeComm.Klaviyo.1.0.0']();
-	SC.addExtensionModule('NSeComm.Klaviyo.Main');
 }
 catch(error)
 {

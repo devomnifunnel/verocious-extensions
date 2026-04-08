@@ -2,14 +2,15 @@
     "name": "PacejetIntegration",
     "fantasyName": "Pacejet Integration",
     "vendor": "NSeComm",
+    "version": "1.0.3",
     "type": "extension",
     "target": "SCA,SCS",
     "target_version": {
         "SCA": "",
         "SCS": ""
     },
-    "version": "1.0.3",
     "description": "Pacejet integration for checkout process. Disable 'Will Call' Avalara taxes.",
+    "skins": [],
     "assets": {
         "img": {
             "files": []
@@ -55,6 +56,7 @@
             "Modules/Main/SuiteScript/PacejetIntegration.Session.ServiceController.js"
         ]
     },
+    "local_folder": "Workspace/PacejetIntegration",
     "suitescript2": {
         "files": []
     }

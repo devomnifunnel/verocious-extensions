@@ -2,15 +2,14 @@
     "name": "HideInvoiceOption",
     "fantasyName": "Hide Invoice",
     "vendor": "NSeComm",
-    "version": "1.0.0",
     "type": "extension",
     "target": "SCA,SCS",
     "target_version": {
         "SCA": ">=23.2.0",
         "SCS": ">=23.2.0"
     },
+    "version": "1.0.0",
     "description": "Hide Invoice Option in checkout page depending on customer Terms.",
-    "skins": [],
     "assets": {
         "img": {
             "files": []
@@ -39,7 +38,6 @@
             }
         }
     },
-    "local_folder": "Workspace/HideInvoiceOption",
     "suitescript2": {
         "files": []
     }

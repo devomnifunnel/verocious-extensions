@@ -46,6 +46,7 @@
             "checkout": {
                 "files": [
                     "Modules/ReCaptcha/JavaScript/BluePoint.ReCaptcha.ReCaptcha.js",
+                    "Modules/ReCaptcha/JavaScript/BluePoint.ReCaptcha.Loader.js",
                     "Modules/ReCaptcha/JavaScript/BluePoint.ReCaptcha.ReCaptcha.SS2Model.js",
                     "Modules/ReCaptcha/JavaScript/Recaptcha.Login.View.js",
                     "Modules/ReCaptcha/JavaScript/Recaptcha.Register.View.js",

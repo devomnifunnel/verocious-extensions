@@ -8,7 +8,7 @@ define('PacejetIntegration.Session.ServiceController', [
 
         options: {
             post: {
-                checkLoggedInCheckout: true
+                checkLoggedInCheckout: false
             }
         },
 

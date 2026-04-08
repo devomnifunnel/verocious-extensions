@@ -11,7 +11,34 @@
         "port": 7777
     },
     "fetchConfig": {
-        "extension": "AdvancedSignUp,Blog,CanonicalFix,Columns,CookieConsent,CoreContent,CustomFields,CustomPageTitleSuffix,FeaturedCategory,FeaturedProduct,GiftCertificateValueCheck,GridOrder,HideInvoiceOption,ImageTextOverlay,InfiniteScrollExtension,InventoryDisplay,ItemBadges,ItemRecSysWidget,Klaviyo,LiveChat,LogoList,NewsletterSignUp,OrderStatus,PacejetIntegration,ProductComparison,ProductPagePrinter,QuantityUrlCleaner,ReCaptcha,ReorderSizeList,ShippingBar,SummitThemeExtension,Testimonials"
+        "extension": "AdvancedSignUp,BillingAddressOptimization,Blog,CanonicalFix,Columns,CookieConsent,CoreContent,CustomFields,CustomPageTitleSuffix,FeaturedCategory,FeaturedProduct,GiftCertificateValueCheck,GridOrder,HideInvoiceOption,ImageTextOverlay,InfiniteScrollExtension,InventoryDisplay,ItemBadges,ItemRecSysWidget,Klaviyo,LiveChat,LogoList,NewsletterSignUp,OrderStatus,PacejetIntegration,ProductComparison,ProductPagePrinter,QuantityUrlCleaner,ReCaptcha,ReorderSizeList,ShippingBar,SummitThemeExtension,Testimonials",
+        "overwrite_ext": [
+            "Workspace/BillingAddressOptimization",
+            "Workspace/AdvancedSignUp",
+            "Workspace/Blog",
+            "Workspace/Columns",
+            "Workspace/CookieConsent",
+            "Workspace/CoreContent",
+            "Workspace/CustomFields",
+            "Workspace/FeaturedCategory",
+            "Workspace/FeaturedProduct",
+            "Workspace/GiftCertificateValueCheck",
+            "Workspace/GridOrder",
+            "Workspace/ImageTextOverlay",
+            "Workspace/InfiniteScrollExtension",
+            "Workspace/InventoryDisplay",
+            "Workspace/ItemBadges",
+            "Workspace/ItemRecSysWidget",
+            "Workspace/Klaviyo",
+            "Workspace/LogoList",
+            "Workspace/NewsletterSignUp",
+            "Workspace/OrderStatus",
+            "Workspace/ProductComparison",
+            "Workspace/ProductPagePrinter",
+            "Workspace/ShippingBar",
+            "Workspace/SummitThemeExtension",
+            "Workspace/Testimonials"
+        ]
     },
     "extensionMode": true,
     "preserveManifest": false,
@@ -29,14 +56,15 @@
         "extensions_dest_name": "Deploy_Extensions",
         "extmech_parent": "-15",
         "extensions_path": [
+            "Workspace/BillingAddressOptimization",
             "Workspace/CanonicalFix",
             "Workspace/CookieConsentCLSFix",
             "Workspace/CustomPageTitleSuffix",
             "Workspace/HideInvoiceOption",
-            "Workspace/Klaviyo",
             "Workspace/LiveChat",
             "Workspace/MatrixQuickAddFix",
             "Workspace/MatrixQuickAddFixAustenitex",
+            "Workspace/PDPSyncOptimizer",
             "Workspace/PacejetIntegration",
             "Workspace/QuantityUrlCleaner",
             "Workspace/ReCaptcha",
@@ -100,10 +128,6 @@
         "webapp_id": "2361879",
         "ssp_folder": "2361879",
         "is_scis": false,
-        "target_folder": {
-            "parentId": "-15",
-            "folderName": "Deploy_Extensions"
-        },
         "key": "c00dc6941fdf4506f9711b76d701747ac1d65aa8e177a4dcf67ecde1d80cee20",
         "secret": "cf565cea7e76b64649c279ad95e4001817be3483838b6700e5cd736ea5439ac5",
         "account": "606473"

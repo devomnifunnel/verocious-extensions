@@ -1,5 +1,394 @@
 var extensions = {};
 
+extensions['OmniFunnelMarketing.BillingAddressOptimization.1.0.0'] = function(){
+
+function getExtensionAssetsPath(asset){
+	return 'extensions/OmniFunnelMarketing/BillingAddressOptimization/1.0.0/' + asset;
+}
+
+// @module OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization
+define('OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View'
+,	[
+	'omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization.tpl'
+	
+	,	'OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model'
+	
+	,	'Backbone'
+    ]
+, function (
+	omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization_tpl
+	
+	,	BillingAddressOptimizationSS2Model
+	
+	,	Backbone
+)
+{
+    'use strict';
+
+	// @class OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View @extends Backbone.View
+	return Backbone.View.extend({
+
+		template: omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization_tpl
+
+	,	initialize: function (options) {
+
+			/*  Uncomment to test backend communication with an example service
+				(you'll need to deploy and activate the extension first)
+			*/
+
+			// this.model = new BillingAddressOptimizationModel();
+			// var self = this;
+         	// this.model.fetch().done(function(result) {
+			// 	self.message = result.message;
+			// 	self.render();
+      		// });
+		}
+
+	,	events: {
+		}
+
+	,	bindings: {
+		}
+
+	, 	childViews: {
+
+		}
+
+		//@method getContext @return OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View.Context
+	,	getContext: function getContext()
+		{
+			//@class OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View.Context
+			this.message = this.message || 'Hello World!!'
+			return {
+				message: this.message
+			};
+		}
+	});
+});
+
+
+// Model.js
+// -----------------------
+// @module Case
+define("OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model", ["Backbone", "Utils"], function(
+    Backbone,
+    Utils
+) {
+    "use strict";
+
+    // @class Case.Fields.Model @extends Backbone.Model
+    return Backbone.Model.extend({
+        //@property {String} urlRoot
+        urlRoot: Utils.getAbsoluteUrl(
+            getExtensionAssetsPath(
+                "Modules/BillingAddressOptimization/SuiteScript2/BillingAddressOptimization.Service.ss"
+            ),
+            true
+        )
+});
+});
+
+
+define(
+    'OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization'
+,   [
+        'jQuery',
+        'Backbone'
+    ]
+,   function (
+        jQuery,
+        Backbone
+    )
+{
+    'use strict';
+
+    return {
+        mountToApp: function mountToApp(container)
+        {
+            function initBillingOptimization() {
+                
+                var userUnchecked = false;
+                var isInitialized = false;
+                
+                // Add CSS to force hide
+                function addForceHideCSS() {
+                    if (!jQuery('#billing-sameas-style').length) {
+                        jQuery('head').append(
+                            '<style id="billing-sameas-style">' +
+                            '.billing-form-force-hide { display: none !important; }' +
+                            '</style>'
+                        );
+                    }
+                }
+                
+                // Check if we're showing address list or new address form
+                function isSavedAddressView() {
+                    return jQuery('[data-manage="billaddress"] .order-wizard-address-module-list-placeholder').length > 0;
+                }
+                
+                function isNewAddressFormView() {
+                    return jQuery('[data-manage="billaddress"] .order-wizard-address-module-form-placeholder').length > 0;
+                }
+                
+                // --- NEW ADDRESS FORM FUNCTIONS ---
+                
+                var fieldMap = {
+                    'fullname': 'fullname',
+                    'company': 'company',
+                    'addr1': 'addr1',
+                    'addr2': 'addr2',
+                    'city': 'city',
+                    'country': 'country',
+                    'state': 'state',
+                    'zip': 'zip',
+                    'phone': 'phone',
+                    'isresidential': 'isresidential'
+                };
+                
+                function getShippingField(fieldName) {
+                    return jQuery('#shipaddress-' + fieldName + ', [name="' + fieldName + '"]').filter(function() {
+                        return this.id && this.id.startsWith('shipaddress');
+                    }).first();
+                }
+                
+                function getBillingField(fieldName) {
+                    return jQuery('#billaddress-' + fieldName + ', [name="' + fieldName + '"]').filter(function() {
+                        return this.id && this.id.startsWith('billaddress');
+                    }).first();
+                }
+                
+                function copyFieldValue(fieldName) {
+                    var $shipField = getShippingField(fieldName);
+                    var $billField = getBillingField(fieldName);
+                    
+                    if ($shipField.length && $billField.length) {
+                        if ($shipField.is(':checkbox')) {
+                            $billField.prop('checked', $shipField.is(':checked'));
+                        } else {
+                            $billField.val($shipField.val()).trigger('change');
+                        }
+                    }
+                }
+                
+                function copyAllFields() {
+                    Object.keys(fieldMap).forEach(function(fieldName) {
+                        copyFieldValue(fieldName);
+                    });
+                }
+                
+                function clearAllBillingFields() {
+                    Object.keys(fieldMap).forEach(function(fieldName) {
+                        var $billField = getBillingField(fieldName);
+                        if ($billField.length) {
+                            if ($billField.is(':checkbox')) {
+                                $billField.prop('checked', false);
+                            } else {
+                                $billField.val('').trigger('change');
+                            }
+                        }
+                    });
+                }
+                
+                function bindShippingFieldListeners() {
+                    Object.keys(fieldMap).forEach(function(fieldName) {
+                        var $shipField = getShippingField(fieldName);
+                        
+                        if ($shipField.length) {
+                            $shipField.off('keyup.sameas change.sameas blur.sameas').on('keyup.sameas change.sameas blur.sameas', function() {
+                                if (!userUnchecked && isNewAddressFormView()) {
+                                    copyFieldValue(fieldName);
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                // --- SAVED ADDRESS LIST FUNCTIONS ---
+                
+                function getSelectedShippingAddressId() {
+                    var $selected = jQuery('[data-manage="shipaddress"] input[name="address-options-shipaddress"]:checked');
+                    return $selected.val() || $selected.data('id');
+                }
+                
+                function selectBillingAddress(addressId) {
+                    var $billingRadio = jQuery('[data-manage="billaddress"] input[value="' + addressId + '"]');
+                    if ($billingRadio.length) {
+                        $billingRadio.prop('checked', true).trigger('click');
+                    }
+                }
+                
+                function bindShippingAddressSelection() {
+                    jQuery('[data-manage="shipaddress"] input[name="address-options-shipaddress"]').off('change.sameas').on('change.sameas', function() {
+                        if (!userUnchecked && isSavedAddressView()) {
+                            var selectedId = jQuery(this).val() || jQuery(this).data('id');
+                            if (selectedId) {
+                                selectBillingAddress(selectedId);
+                            }
+                        }
+                    });
+                }
+                
+                // --- COMMON FUNCTIONS ---
+                
+                function hideBillingContainer() {
+                    var $billingContainer = jQuery('[data-manage="billaddress"]').closest('.order-wizard-address-module-list-placeholder, .order-wizard-address-module-form-placeholder');
+                    $billingContainer.addClass('billing-form-force-hide');
+                }
+                
+                function showBillingContainer() {
+                    var $billingContainer = jQuery('[data-manage="billaddress"]').closest('.order-wizard-address-module-list-placeholder, .order-wizard-address-module-form-placeholder');
+                    $billingContainer.removeClass('billing-form-force-hide');
+                }
+                
+                function setupCheckboxHandler() {
+                    var $checkbox = jQuery('[data-action="same-as"]');
+                    
+                    if (!$checkbox.length) {
+                        return;
+                    }
+                    
+                    $checkbox.off('change.custom');
+                    
+                    $checkbox.on('change.custom', function() {
+                        var isChecked = jQuery(this).is(':checked');
+                        
+                        if (isChecked) {
+                            // CHECKED: Hide container and sync
+                            userUnchecked = false;
+                            
+                            if (isSavedAddressView()) {
+                                // Match shipping address selection
+                                var shipAddressId = getSelectedShippingAddressId();
+                                if (shipAddressId) {
+                                    selectBillingAddress(shipAddressId);
+                                }
+                                bindShippingAddressSelection();
+                            } else if (isNewAddressFormView()) {
+                                // Copy form fields
+                                copyAllFields();
+                                bindShippingFieldListeners();
+                            }
+                            
+                            hideBillingContainer();
+                            
+                        } else {
+                            // UNCHECKED: Show container and clear
+                            userUnchecked = true;
+                            
+                            if (isNewAddressFormView()) {
+                                clearAllBillingFields();
+                                Object.keys(fieldMap).forEach(function(fieldName) {
+                                    getShippingField(fieldName).off('keyup.sameas change.sameas blur.sameas');
+                                });
+                            }
+                            
+                            showBillingContainer();
+                        }
+                    });
+                }
+                
+                function applyBillingDefaults() {
+                    var $checkbox = jQuery('[data-action="same-as"]');
+                    
+                    if (!$checkbox.length) {
+                        return;
+                    }
+                    
+                    addForceHideCSS();
+                    
+                    $checkbox.prop('disabled', false);
+                    
+                    if (!isInitialized || !userUnchecked) {
+                        $checkbox.prop('checked', true);
+                        hideBillingContainer();
+                        
+                        if (isSavedAddressView()) {
+                            // Match shipping address
+                            var shipAddressId = getSelectedShippingAddressId();
+                            if (shipAddressId) {
+                                selectBillingAddress(shipAddressId);
+                            }
+                            bindShippingAddressSelection();
+                        } else if (isNewAddressFormView()) {
+                            // Don't copy yet, wait for user input
+                            bindShippingFieldListeners();
+                        }
+                    } else {
+                        $checkbox.prop('checked', false);
+                        
+                        if (isNewAddressFormView()) {
+                            clearAllBillingFields();
+                        }
+                        
+                        showBillingContainer();
+                    }
+                    
+                    setupCheckboxHandler();
+                    
+                    isInitialized = true;
+                }
+                
+                // Apply immediately
+                applyBillingDefaults();
+                
+                // Watch for re-renders
+                var observer = new MutationObserver(function(mutations) {
+                    var billingContainerAdded = false;
+                    
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length) {
+                            for (var i = 0; i < mutation.addedNodes.length; i++) {
+                                var node = mutation.addedNodes[i];
+                                if (node.nodeType === 1) {
+                                    if (node.querySelector && node.querySelector('[data-manage="billaddress"]')) {
+                                        billingContainerAdded = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                    if (billingContainerAdded) {
+                        setTimeout(applyBillingDefaults, 100);
+                    }
+                });
+                
+                var targetNode = document.querySelector('.order-wizard-step-content-wrapper');
+                if (targetNode) {
+                    observer.observe(targetNode, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
+            }
+            
+            if (typeof jQuery !== 'undefined') {
+                jQuery(document).ready(function() {
+                    setTimeout(initBillingOptimization, 1000);
+                });
+            } else {
+                if (document.readyState === 'complete') {
+                    setTimeout(initBillingOptimization, 1000);
+                } else {
+                    window.addEventListener('load', function() {
+                        setTimeout(initBillingOptimization, 1000);
+                    });
+                }
+            }
+            
+            if (typeof Backbone !== 'undefined' && Backbone.history) {
+                Backbone.history.on('route', function() {
+                    setTimeout(initBillingOptimization, 1000);
+                });
+            }
+        }
+    };
+});
+
+
+};
+
 extensions['OmniFunnelMarketing.CanonicalFix.1.0.0'] = function(){
 
 function getExtensionAssetsPath(asset){
@@ -544,136 +933,6 @@ define('NSeComm.CustomPageTitleSuffix.Main', [
 
 };
 
-extensions['NSeComm.Klaviyo.1.0.0'] = function(){
-
-function getExtensionAssetsPath(asset){
-	return 'extensions/NSeComm/Klaviyo/1.0.0/' + asset;
-}
-
-/*
-    © 2024 NetSuite Inc.
-    User may not copy, modify, distribute, or re-bundle or otherwise make available this code;
-    provided, however, if you are an authorized user with a NetSuite account or log-in, you
-    may use this code subject to the terms that govern your access and use.
-*/
-/* globals klaviyo */
-define('NSeComm.Klaviyo.Main', [
-    'jQuery',
-    'underscore'
-], function NSeCommKlaviyoMain(
-    jQuery,
-    _
-) {
-    'use strict';
-
-    return {
-
-        getItems: function getItems(lines) {
-            var result = {};
-            var itemObj;
-            result.itemNames = [];
-            result.items = [];
-
-            _.each(lines, function eachLine(line) {
-                result.itemNames.push(line.item.extras.storedisplayname2);
-
-                itemObj = {};
-                itemObj.ProductID = line.item.internalid;
-                itemObj.SKU = line.item.itemid;
-                itemObj.ProductName = line.item.extras.storedisplayname2;
-                itemObj.Quantity = line.quantity;
-                itemObj.ItemPrice = line.rate;
-                itemObj.RowTotal = line.amount;
-                itemObj.ProductURL = line.item.extras.keyMapping_url;
-                itemObj.ImageURL = line.item.extras.keyMapping_thumbnail.url;
-
-                result.items.push(itemObj);
-            });
-
-            return result;
-        },
-
-        mountToApp: function mountToApp(container) {
-            var environment = container.getComponent('Environment');
-            var layout = container.getComponent('Layout');
-            var checkout = container.getComponent('Checkout');
-            var cart = container.getComponent('Cart');
-            var klaviyoUrl = environment.getConfig('klaviyo.url');
-            var customerCategory = environment.getConfig('klaviyo.customerCategory');
-            var item;
-            var klaviyoTracker;
-            var self = this;
-            var orderInfo = {};
-            var itemsInfo = {};
-
-            if (environment.isPageGenerator()) {
-                return;
-            }
-
-            klaviyoTracker = {
-                trackProductView: function trackProductView(line) {
-                    item = {
-                        'ProductName': line.name,
-                        'ProductID': line.internalId,
-                        'SKU': line.sku,
-                        'ImageURL': line.thumbnail,
-                        'URL': line.urlComponent,
-                        'Price': line.price
-                    };
-                    klaviyo.push(['track', 'Viewed Product', item]);
-                }
-            };
-
-            if (layout) {
-                jQuery('body').on('change', '#cct_netsuite_newsletter', function onNewsletterChange() {
-                    jQuery('.newslettercct-submit').on('click', function sendInfoToKlaviyo() {
-                        var firstName = jQuery('.newslettercct-container [name="firstName"]').val();
-                        var lastName = jQuery('.newslettercct-container [name="lastName"]').val();
-                        var email = jQuery('.newslettercct-container [name="email"]').val();
-
-                        if (firstName && lastName && email) {
-                            klaviyo.push(['track', 'Subscribed to Email Marketing', {
-                                email: email,
-                                firstName: firstName,
-                                lastName: lastName,
-                                customerCategory: customerCategory
-                            }]);
-                        }
-                    });
-                });
-            }
-
-            jQuery.getScript(klaviyoUrl).done(function pushKlaviyo() {
-                environment.addTracker(klaviyoTracker);
-            });
-
-            if (checkout) {
-                checkout.on('afterShowContent', function addKlaviyoEvent() {
-                    checkout.getCurrentStep().then(function validateStep(step) {
-                        if (step.step_group_name === 'Shipping Address') {
-                            cart.getLines().then(function sendKlaviyoInformation(lines) {
-                                self.lines = lines;
-                                cart.getSummary().then(function getSummary(summary) {
-                                    orderInfo.$value = summary.total;
-                                    orderInfo.CheckoutURL = window.location.href;
-                                    itemsInfo = self.getItems(self.lines);
-                                    orderInfo.ItemNames = itemsInfo.itemNames;
-                                    orderInfo.Items = itemsInfo.items;
-
-                                    klaviyo.push(['track', 'Started Checkout', orderInfo]);
-                                });
-                            });
-                        }
-                    });
-                });
-            }
-        }
-    };
-});
-
-
-};
-
 extensions['NSeComm.LiveChat.1.0.0'] = function(){
 
 function getExtensionAssetsPath(asset){
@@ -1105,6 +1364,328 @@ define('OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAusteni
         }
     };
 });
+
+};
+
+extensions['OmniFunnelMarketing.PDPSyncOptimizer.1.0.0'] = function(){
+
+function getExtensionAssetsPath(asset){
+	return 'extensions/OmniFunnelMarketing/PDPSyncOptimizer/1.0.0/' + asset;
+}
+
+/**
+ * PDP Sync Optimizer - Client Side
+ *
+ * Two optimizations:
+ *
+ * 1. Matrix child bloat stripping: Removes the custitemhtmlchart_verocious
+ *    field from matrixchilditems_detail before the model processes the
+ *    response. This field is identical across all children and already
+ *    exists on the parent. Stripping it from 1,536 children saves ~228 MB
+ *    of redundant data per PDP load.
+ *
+ * 2. Three-layer caching strategy:
+ *    a. SC.ENVIRONMENT.ITEMS (injected server-side by SSP Library hook)
+ *    b. localStorage cache (persists across sessions, 30 min TTL)
+ *    c. Fall through to normal API call (strip bloat, cache the result)
+ */
+define(
+    'OmniFunnelMarketing.PDPSyncOptimizer.PDPSyncOptimizer'
+,   [
+        'Backbone'
+    ,   'jQuery'
+    ,   'underscore'
+    ,   'SC.Configuration'
+    ]
+,   function (
+        Backbone
+    ,   $
+    ,   _
+    ,   Configuration
+    )
+{
+    'use strict';
+
+    var TAG = '[PDPSyncOptimizer]';
+    var originalSync = Backbone.sync;
+    var CACHE_PREFIX = 'pdpSync_';
+    var CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+    // Fields to strip from matrix child items. These are large, redundant
+    // fields that exist on the parent and are identical across all children.
+    var CHILD_BLOAT_FIELDS = [
+        'custitemhtmlchart_verocious'
+    ];
+
+    // Routes that are never PDP pages
+    var NON_PDP_PREFIXES = [
+        'search', 'cart', 'checkout', 'my-account', 'account',
+        'login', 'register', 'forgot-password', 'reset-password',
+        'wishlist', 'returns', 'cases', 'overview', 'confirmation',
+        'categories', 'stores', 'locator', 'compare', 'quick-order',
+        'reorder', 'quotes', 'receipt', 'thankyou', 'balance',
+        'creditcard', 'address', 'settings', 'orders', 'invoice'
+    ];
+
+    // -------------------------------------------------------------------
+    // Detection helpers
+    // -------------------------------------------------------------------
+
+    function isItemsReadSync(method, model, options) {
+        if (method !== 'read') {
+            return false;
+        }
+        var url = options.url || _.result(model, 'url') || '';
+        return (/\/api\/(cacheable\/)?items/i).test(url) ||
+               (/items\.ss/i).test(url);
+    }
+
+    function couldBePDPRoute() {
+        var fragment = (Backbone.history.getFragment() || '').split('?')[0].toLowerCase();
+        if (!fragment) {
+            return false;
+        }
+        for (var i = 0; i < NON_PDP_PREFIXES.length; i++) {
+            if (fragment.indexOf(NON_PDP_PREFIXES[i]) === 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getCurrentItemSlug() {
+        var fragment = (Backbone.history.getFragment() || '').split('?')[0];
+        var parts = fragment.split('/');
+        return parts[parts.length - 1] || fragment;
+    }
+
+    // -------------------------------------------------------------------
+    // Matrix child bloat stripping
+    // -------------------------------------------------------------------
+
+    /**
+     * Strip redundant large fields from matrix child items.
+     * Modifies the data in place. Returns the same object with children
+     * trimmed. The parent item retains all fields.
+     */
+    function stripChildBloat(data) {
+        if (!data) {
+            return data;
+        }
+
+        // Handle both single item and items array responses
+        var items = data.items || (data.internalid ? [data] : []);
+
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var children = item.matrixchilditems_detail;
+
+            if (children && children.length) {
+                var stripped = 0;
+                var savedBytes = 0;
+
+                for (var c = 0; c < children.length; c++) {
+                    for (var f = 0; f < CHILD_BLOAT_FIELDS.length; f++) {
+                        var field = CHILD_BLOAT_FIELDS[f];
+                        if (children[c][field]) {
+                            savedBytes += String(children[c][field]).length;
+                            delete children[c][field];
+                            stripped++;
+                        }
+                    }
+                }
+
+                if (stripped > 0) {
+                    console.log(TAG, 'Stripped bloat from matrix children.', {
+                        childrenCount: children.length,
+                        fieldsStripped: stripped,
+                        savedMB: (savedBytes / 1024 / 1024).toFixed(1)
+                    });
+                }
+            }
+        }
+
+        return data;
+    }
+
+    // -------------------------------------------------------------------
+    // Layer 1: SC.ENVIRONMENT.ITEMS (server-side preloaded)
+    // -------------------------------------------------------------------
+
+    function getFromEnvironment() {
+        if (typeof SC === 'undefined' || !SC.ENVIRONMENT) {
+            return null;
+        }
+
+        if (SC.ENVIRONMENT.ITEMS && SC.ENVIRONMENT.ITEMS.length) {
+            if (SC.ENVIRONMENT.ITEMS.length === 1) {
+                console.log(TAG, 'Layer 1 HIT: SC.ENVIRONMENT.ITEMS (single item)');
+                return SC.ENVIRONMENT.ITEMS[0];
+            }
+
+            var slug = getCurrentItemSlug();
+            if (slug) {
+                var matched = _.find(SC.ENVIRONMENT.ITEMS, function (item) {
+                    return item.urlcomponent === slug ||
+                           item.url === slug ||
+                           String(item.internalid) === slug;
+                });
+                if (matched) {
+                    console.log(TAG, 'Layer 1 HIT: SC.ENVIRONMENT.ITEMS (matched slug: ' + slug + ')');
+                    return matched;
+                }
+            }
+        }
+
+        if (SC.ENVIRONMENT.contextData && SC.ENVIRONMENT.contextData.item) {
+            console.log(TAG, 'Layer 1 HIT: SC.ENVIRONMENT.contextData.item');
+            return SC.ENVIRONMENT.contextData.item;
+        }
+
+        if (SC.ENVIRONMENT.item) {
+            console.log(TAG, 'Layer 1 HIT: SC.ENVIRONMENT.item');
+            return SC.ENVIRONMENT.item;
+        }
+
+        console.log(TAG, 'Layer 1 MISS: No preloaded data in SC.ENVIRONMENT');
+        return null;
+    }
+
+    // -------------------------------------------------------------------
+    // Layer 2: localStorage cache
+    // -------------------------------------------------------------------
+
+    function getCacheKey(url) {
+        var match = url.match(/[?&]url=([^&]+)/) || url.match(/[?&]id=([^&]+)/);
+        if (match) {
+            return CACHE_PREFIX + decodeURIComponent(match[1]);
+        }
+        var fragment = (Backbone.history.getFragment() || '').split('?')[0];
+        return fragment ? CACHE_PREFIX + fragment : null;
+    }
+
+    function getFromCache(key) {
+        try {
+            var raw = localStorage.getItem(key);
+            if (!raw) {
+                return null;
+            }
+            var entry = JSON.parse(raw);
+            if (Date.now() - entry.timestamp > CACHE_TTL) {
+                localStorage.removeItem(key);
+                return null;
+            }
+            return entry.data;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function setCache(key, data) {
+        try {
+            localStorage.setItem(key, JSON.stringify({
+                data: data,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.warn(TAG, 'localStorage write failed. Storage may be full.');
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Sync override
+    // -------------------------------------------------------------------
+
+    return {
+        mountToApp: function mountToApp(container) {
+            console.log(TAG, 'mountToApp fired. Extension is loaded.');
+
+            if (Configuration['PDPSyncOptimizer.enabled'] === false) {
+                console.warn(TAG, 'Extension DISABLED via configuration.');
+                return;
+            }
+
+            console.log(TAG, 'Extension ENABLED. Patching Backbone.sync.');
+
+            Backbone.sync = function pdpOptimizedSync(method, model, options) {
+                options = options || {};
+
+                var url = options.url || _.result(model, 'url') || '';
+                var isPDP = couldBePDPRoute();
+                var isItemsCall = isItemsReadSync(method, model, options);
+
+                if (isPDP && isItemsCall) {
+                    var route = (Backbone.history.getFragment() || '').split('?')[0];
+
+                    // Layer 1: Check SC.ENVIRONMENT (server-side preloaded)
+                    var preloaded = getFromEnvironment();
+                    if (preloaded) {
+                        console.log(TAG, 'SKIPPING API call. Using server-preloaded data.', {
+                            route: route,
+                            itemId: preloaded.internalid
+                        });
+
+                        var d1 = $.Deferred();
+                        if (options.success) {
+                            options.success(stripChildBloat(preloaded));
+                        }
+                        d1.resolve(preloaded);
+                        return d1.promise();
+                    }
+
+                    // Layer 2: Check localStorage cache (already stripped)
+                    var cacheKey = getCacheKey(url);
+                    if (cacheKey) {
+                        var cached = getFromCache(cacheKey);
+                        if (cached) {
+                            console.log(TAG, 'SKIPPING API call. Using localStorage cache.', {
+                                route: route,
+                                key: cacheKey
+                            });
+
+                            var d2 = $.Deferred();
+                            if (options.success) {
+                                options.success(cached);
+                            }
+                            d2.resolve(cached);
+                            return d2.promise();
+                        }
+                    }
+
+                    // Layer 3: Fall through to API. Strip bloat, then cache.
+                    console.log(TAG, 'CACHE MISS on all layers. API call proceeding.', {
+                        route: route,
+                        key: cacheKey
+                    });
+
+                    var originalSuccess = options.success;
+                    options.success = function (data) {
+                        // Strip bloated fields from matrix children before
+                        // the model processes the response
+                        var cleaned = stripChildBloat(data);
+
+                        // Cache the cleaned (smaller) version
+                        if (cacheKey && cleaned) {
+                            setCache(cacheKey, cleaned);
+                            console.log(TAG, 'Cleaned response cached in localStorage.', {
+                                key: cacheKey
+                            });
+                        }
+
+                        if (originalSuccess) {
+                            originalSuccess.call(this, cleaned);
+                        }
+                    };
+                }
+
+                return originalSync.call(this, method, model, options);
+            };
+
+            console.log(TAG, 'Backbone.sync patched. Bloat stripping + 3-layer caching active.');
+        }
+    };
+});
+
 
 };
 
@@ -1578,7 +2159,17 @@ define('NSeComm.ReorderSizeList.Main', [
 
 };
 
-SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.Model","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model"];
+SC.ENVIRONMENT.EXTENSIONS_JS_MODULE_NAMES = ["OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.View","OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model","default.CanonicalFix.CanonicalFix.View","default.CanonicalFix.CanonicalFix.Model","default.CanonicalFix.CanonicalFix.SS2Model","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.View","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.Model","OmniFunnelMarketing.CookieConsentCLSFix.CookieConsentCLSFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.View","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.Model","OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.SS2Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.View","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.Model","OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex.SS2Model","default.QuantityUrlCleaner.QuantityUrlCleaner.View","default.QuantityUrlCleaner.QuantityUrlCleaner.SS2Model"];
+try{
+	extensions['OmniFunnelMarketing.BillingAddressOptimization.1.0.0']();
+	SC.addExtensionModule('OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization');
+}
+catch(error)
+{
+	console.error(error);
+}
+
+
 try{
 	extensions['OmniFunnelMarketing.CanonicalFix.1.0.0']();
 	SC.addExtensionModule('default.CanonicalFix.CanonicalFix');
@@ -1610,16 +2201,6 @@ catch(error)
 
 
 try{
-	extensions['NSeComm.Klaviyo.1.0.0']();
-	SC.addExtensionModule('NSeComm.Klaviyo.Main');
-}
-catch(error)
-{
-	console.error(error);
-}
-
-
-try{
 	extensions['NSeComm.LiveChat.1.0.0']();
 	SC.addExtensionModule('NSeComm.LiveChat.Main');
 }
@@ -1642,6 +2223,16 @@ catch(error)
 try{
 	extensions['OmniFunnelMarketing.MatrixQuickAddFixAustenitex.1.0.0']();
 	SC.addExtensionModule('OmniFunnelMarketing.MatrixQuickAddFixAustenitex.MatrixQuickAddFixAustenitex');
+}
+catch(error)
+{
+	console.error(error);
+}
+
+
+try{
+	extensions['OmniFunnelMarketing.PDPSyncOptimizer.1.0.0']();
+	SC.addExtensionModule('OmniFunnelMarketing.PDPSyncOptimizer.PDPSyncOptimizer');
 }
 catch(error)
 {
