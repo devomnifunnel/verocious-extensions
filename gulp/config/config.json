@@ -14,6 +14,14 @@
         "extension": "AdvancedSignUp,BillingAddressOptimization,Blog,CanonicalFix,Columns,CookieConsent,CoreContent,CustomFields,CustomPageTitleSuffix,FeaturedCategory,FeaturedProduct,GiftCertificateValueCheck,GridOrder,HideInvoiceOption,ImageTextOverlay,InfiniteScrollExtension,InventoryDisplay,ItemBadges,ItemRecSysWidget,Klaviyo,LiveChat,LogoList,NewsletterSignUp,OrderStatus,PacejetIntegration,ProductComparison,ProductPagePrinter,QuantityUrlCleaner,ReCaptcha,ReorderSizeList,ShippingBar,SummitThemeExtension,Testimonials",
         "overwrite_ext": [
             "Workspace/BillingAddressOptimization",
+            "Workspace/CanonicalFix",
+            "Workspace/CustomPageTitleSuffix",
+            "Workspace/HideInvoiceOption",
+            "Workspace/LiveChat",
+            "Workspace/PacejetIntegration",
+            "Workspace/QuantityUrlCleaner",
+            "Workspace/ReCaptcha",
+            "Workspace/ReorderSizeList",
             "Workspace/AdvancedSignUp",
             "Workspace/Blog",
             "Workspace/Columns",
@@ -56,18 +64,17 @@
         "extensions_dest_name": "Deploy_Extensions",
         "extmech_parent": "-15",
         "extensions_path": [
-            "Workspace/BillingAddressOptimization",
-            "Workspace/CanonicalFix",
             "Workspace/CookieConsentCLSFix",
-            "Workspace/CustomPageTitleSuffix",
-            "Workspace/HideInvoiceOption",
-            "Workspace/LiveChat",
             "Workspace/MatrixQuickAddFix",
             "Workspace/MatrixQuickAddFixAustenitex",
             "Workspace/PDPSyncOptimizer",
+            "Workspace/CanonicalFix",
+            "Workspace/CustomPageTitleSuffix",
+            "Workspace/HideInvoiceOption",
+            "Workspace/LiveChat",
             "Workspace/PacejetIntegration",
-            "Workspace/QuantityUrlCleaner",
             "Workspace/ReCaptcha",
+            "Workspace/QuantityUrlCleaner",
             "Workspace/ReorderSizeList"
         ],
         "theme_path": "Workspace/Extras/Summit",
@@ -130,7 +137,11 @@
         "is_scis": false,
         "key": "c00dc6941fdf4506f9711b76d701747ac1d65aa8e177a4dcf67ecde1d80cee20",
         "secret": "cf565cea7e76b64649c279ad95e4001817be3483838b6700e5cd736ea5439ac5",
-        "account": "606473"
+        "account": "606473",
+        "target_folder": {
+            "parentId": "-15",
+            "folderName": "Deploy_Extensions"
+        }
     },
     "nsdeployPath": ".nsdeploy"
 }
