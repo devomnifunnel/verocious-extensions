@@ -10157,7 +10157,7 @@ html .bx-pager-item img {
 }
 
 /* Edited for Summit Theme */
-.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .canonicalfix-info-card, .billingaddressoptimization-info-card, .paymentinstrument-ach-list .paymentinstrument-ach-content,
+.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .canonicalfix-info-card, .paymentinstrument-ach-list .paymentinstrument-ach-content,
 .paymentinstrument-ach-module-list-placeholder .paymentinstrument-ach-content, .order-wizard-showshipments-module-shipping-details-method-info-card, .order-wizard-showshipments-actionable-module-shipping-details-method-info-card, .order-wizard-msr-shipmethod-package-item-count-label, .order-wizard-msr-shipmethod-package-address-detail,
 .order-wizard-msr-shipmethod-package-delivery-option, .paymentinstrument-creditcard-list .paymentinstrument-creditcard-content,
 .paymentinstrument-creditcard-module-list-placeholder .paymentinstrument-creditcard-content, .payment-methods-summary, .order-wizard-showpayments-module-payment-methods-summary, .order-wizard-paymentmethod-creditcard-module-selected-card, .order-wizard-cartitems-pickup-in-store-details-address-container, .creditcard-list .creditcard-content,
@@ -10186,7 +10186,7 @@ html .bx-pager-item img {
   border-style: dashed;
 }
 
-.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .canonicalfix-info-card-content, .billingaddressoptimization-info-card-content {
+.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .canonicalfix-info-card-content {
   margin: 5px 0;
 }
 
@@ -21268,19 +21268,6 @@ Default merchandising template styling merchzone_default.txt
   #site-header .header-site-search.search-desktop {
     display: none !important;
   }
-}
-
-/*
-	Sass Application Entry Point
-	Link all your sass dependencies in the right order
-
-	Example:
-	@import "other-sass-file.scss";
-	@import "../../<other module>/Sass/other-sass-file.scss";
-*/
-.billingaddressoptimization-info-card-content {
-  color: #4f88b0;
-  font-weight: bold;
 }
 
 /*

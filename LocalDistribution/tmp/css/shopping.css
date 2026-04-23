@@ -9246,7 +9246,7 @@ html .bx-pager-item img {
 }
 
 /* Edited for Summit Theme */
-.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .cookieconsentclsfix-info-card, .canonicalfix-info-card, .billingaddressoptimization-info-card {
+.info-card, .matrixquickaddfixaustenitex-info-card, .matrixquickaddfix-info-card, .cookieconsentclsfix-info-card, .canonicalfix-info-card {
   background: white;
   border: none;
   padding: 15px;
@@ -9270,7 +9270,7 @@ html .bx-pager-item img {
   border-style: dashed;
 }
 
-.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .cookieconsentclsfix-info-card-content, .canonicalfix-info-card-content, .billingaddressoptimization-info-card-content {
+.info-card-content, .matrixquickaddfixaustenitex-info-card-content, .matrixquickaddfix-info-card-content, .cookieconsentclsfix-info-card-content, .canonicalfix-info-card-content {
   margin: 5px 0;
 }
 
@@ -20778,19 +20778,6 @@ Default merchandising template styling merchzone_default.txt
   #site-header .header-site-search.search-desktop {
     display: none !important;
   }
-}
-
-/*
-	Sass Application Entry Point
-	Link all your sass dependencies in the right order
-
-	Example:
-	@import "other-sass-file.scss";
-	@import "../../<other module>/Sass/other-sass-file.scss";
-*/
-.billingaddressoptimization-info-card-content {
-  color: #4f88b0;
-  font-weight: bold;
 }
 
 /*

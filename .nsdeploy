@@ -11,6 +11,8 @@
         "target_folder": {
             "parentId": "-15",
             "folderName": "Deploy_Extensions"
-        }
+        },
+        "script": "customscript_ext_mech_deployer_rest",
+        "deploy": "customdeploy_ext_mech_deployer_rest"
     }
 }
