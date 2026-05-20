@@ -25,6 +25,13 @@ define('NSeComm.PacejetIntegration.Main', [
             var pacejetTemporalStateModel = new PacejetIntegrationSessionModel();
 
             if (checkout) {
+                var isLoggedIn = false;
+                try {
+                    var ProfileModel = require('Profile.Model');
+                    var profile = ProfileModel.getInstance();
+                    isLoggedIn = profile.get('isLoggedIn') === 'T' || profile.get('isGuest') === 'T';
+                } catch (ignore) {}
+
                 checkout.addToViewContextDefinition('OrderWizard.Module.Shipmethod', 'shippingMethods', 'array', function refreshDeliveryDates(context) {
                     // View context strips custom properties, so look up isFreeShipping from the model
                     var LiveOrderModel = require('LiveOrder.Model');
@@ -75,22 +82,30 @@ define('NSeComm.PacejetIntegration.Main', [
 
                 jQuery('body').on('change', '#shipaddress-state[name="state"]', function onStateChange(e) {
                     pacejetTemporalStateModel.set('state', e.target.value);
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
 
                 jQuery('body').on('change', '#shipaddresscountry[name="country"]', function onCountryChange() {
                     pacejetTemporalStateModel.set('state', '');
                     pacejetTemporalStateModel.set('city', '');
                     pacejetTemporalStateModel.set('addr1', '');
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
                 jQuery('body').on('change', '#shipaddress-city[name="city"]', function onCityChange(e) {
                     pacejetTemporalStateModel.set('city', e.target.value);
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
                 jQuery('body').on('change', '#shipaddress-addr1[name="addr1"]', function onCityChange(e) {
                     pacejetTemporalStateModel.set('addr1', e.target.value);
-                    pacejetTemporalStateModel.save();
+                    if (isLoggedIn) {
+                        pacejetTemporalStateModel.save();
+                    }
                 });
             }
         }

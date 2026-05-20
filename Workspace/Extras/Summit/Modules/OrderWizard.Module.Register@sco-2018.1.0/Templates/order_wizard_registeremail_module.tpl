@@ -11,7 +11,7 @@
 
 			<input type="email" name="email" id="email" class="order-wizard-registeremail-module-edit-fields-group-input" placeholder="{{translate 'your@email.com'}}" value="{{email}}" >
 			<small class="order-wizard-registeremail-module-input-help">
-				{{translate 'We need you email address to send you information about your order.'}}
+				{{translate 'We need your email address to send you information about your order.'}}
 			</small>
 		</div>
 		<label class="order-wizard-registeremail-module-checkbox">

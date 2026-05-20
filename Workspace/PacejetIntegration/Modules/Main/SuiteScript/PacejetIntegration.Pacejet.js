@@ -117,14 +117,18 @@ function PacejetIntegrationPacejet(
     }
 
     function getLengthAndWeight(items) {
-        var itemWeightArr = [];
+        var unitWeightArr = [];
+        var lineWeightArr = [];
         var currItemObj;
         var itemLenArr = [];
         var result = {};
 
         _.each(items, function getItemPacejetLength(item) {
-            if (item.weight) {
-                itemWeightArr.push(Number(item.weight));
+            var qty = Number(item.quantity) || 1;
+            var unitWeight = Number(item.weight) || 0;
+            if (unitWeight) {
+                unitWeightArr.push(unitWeight);
+                lineWeightArr.push(unitWeight * qty);
             }
             if (item.custitem_pacejet_item_length) {
                 currItemObj = {};
@@ -133,12 +137,12 @@ function PacejetIntegrationPacejet(
                 itemLenArr.push(currItemObj);
             }
         });
-        result.totalWeight = itemWeightArr.reduce(function reduce(a, b) {
+        result.totalWeight = lineWeightArr.reduce(function reduce(a, b) {
             return a + b;
         }, 0);
         result.maxLen = _.max(itemLenArr, 'itemLength');
-        result.maxWeight = itemWeightArr.length > 0
-            ? Math.max.apply(null, itemWeightArr)
+        result.maxWeight = unitWeightArr.length > 0
+            ? Math.max.apply(null, unitWeightArr)
             : 0;
 
         return result;
@@ -176,6 +180,23 @@ function PacejetIntegrationPacejet(
                 method.name += '*';
             }
         });
+
+        // [DBG][6-ORPHAN] Pacejet rates with no matching NS shipMethod (inverse of [6-MATCH] DROP).
+        // These rates would otherwise vanish silently because the matcher iterates NS methods.
+        var orphanRates = _.filter(pacejetRates, function findOrphans(rate) {
+            if (!rate.shipCodeXRef) return false;
+            if (rate.exclude === true) return false;
+            return !_.findWhere(shipMethods, { internalid: rate.shipCodeXRef });
+        });
+        if (orphanRates.length) {
+            nlapiLogExecution('error', '[DBG][6-ORPHAN] Pacejet rates with no NS shipMethod count=' + orphanRates.length,
+                _.map(orphanRates, function (rate) {
+                    return 'xref=' + rate.shipCodeXRef
+                        + ' carrier=' + rate.carrierNumber
+                        + ' service=' + rate.carrierClassOfServiceCode
+                        + ' price=' + rate.consigneeFreight + ' cost=' + rate.consignorFreight;
+                }).join(' || '));
+        }
 
         return packageMethod;
     }

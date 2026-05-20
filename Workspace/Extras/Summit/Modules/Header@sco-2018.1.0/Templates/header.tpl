@@ -1,5 +1,62 @@
 {{! Edited for Summit Theme }}
 
+{{!-- FIX 2E-D: REMOVE KLAVIYO'S HEAVY GOOGLE FONTS --}}
+<script>
+(function() {
+    // Remove Klaviyo's custom fonts to save ~400KB
+    function removeKlaviyoFonts() {
+        var kl = document.getElementById('kl-custom-fonts');
+        if (kl) {
+            kl.remove();
+            return true;
+        }
+        return false;
+    }
+    
+    // Try immediately
+    removeKlaviyoFonts();
+    
+    // Watch for it being added
+    if (window.MutationObserver) {
+        var observer = new MutationObserver(function(mutations) {
+            if (removeKlaviyoFonts()) {
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.head, { childList: true });
+        
+        // Stop watching after 10 seconds
+        setTimeout(function() { observer.disconnect(); }, 10000);
+    }
+})();
+</script>
+
+{{!-- FIX C: PRECONNECT HINTS --}}
+<script>
+(function(){
+	var h = document.head;
+	var hints = [
+		['https://fonts.googleapis.com', false],
+		['https://fonts.gstatic.com', true],
+		['https://www.googletagmanager.com', false],
+		['https://sst.verociousmotorsports.com', false]
+	];
+	for (var i = 0; i < hints.length; i++) {
+		var l = document.createElement('link');
+		l.rel = 'preconnect';
+		l.href = hints[i][0];
+		if (hints[i][1]) l.setAttribute('crossorigin', '');
+		h.insertBefore(l, h.firstChild);
+	}
+})();
+</script>
+
+{{!-- FIX 2E-B: PRELOAD CRITICAL FONTS --}}
+<link rel="preload" href="/site/img/fonts/DroidSans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/site/img/fonts/DroidSans-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/site/img/fonts/OpenSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/site/img/fonts/OpenSans-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+
 <div class="header-message" data-view="Message.Placeholder"></div>
 
 <div id="header-version-message" class="header-version-message" data-cms-area="header_version_message" data-cms-area-filters="global"></div>
@@ -121,4 +178,3 @@ Use the following context variables when customizing this template:
 	cartTouchPoint (String)
 
 ----}}
-
