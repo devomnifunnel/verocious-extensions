@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": { 
+        "CartConfirmationOverride.config": {
+            "group": "extensions",
+            "subtab": "CartConfirmationOverride_subtab",
+            "type": "string",
+            "title": "CartConfirmationOverride_Title",
+            "description": "Config description example",
+            "default": "Default config example"
+        }
+    }
+}

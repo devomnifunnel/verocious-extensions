@@ -1,0 +1,78 @@
+{
+	"name": "CartConfirmationCustom",
+	"fantasyName": "Cart Confirmation Custom",
+	"vendor": "OmniFunnelMarketing",
+	"type": "extension",
+	"target": "SCA,SCS",
+	"target_version": {
+		"SCA": ">=25.1.0",
+		"SCS": ">=25.1.0"
+	},
+	"version": "1.0.0",
+	"description": "Custom cart confirmation modal with separate View Cart and Checkout buttons",
+	"assets": {
+		"img": {
+			"files": []
+		},
+		"fonts": {
+			"files": []
+		},
+		"services": {
+			"files": [
+				"services/CartConfirmationOverride.Service.ss"
+			]
+		}
+	},
+	"configuration": {
+		"files": [
+			"Modules/CartConfirmationOverride/Configuration/CartConfirmationOverride.json"
+		]
+	},
+	"templates": {
+		"application": {
+			"shopping": {
+				"files": [
+					"Modules/CartConfirmationOverride/Templates/omnifunnelmarketing_cartconfirmationcustom_cartconfirmationoverride.tpl"
+				]
+			}
+		}
+	},
+	"sass": {
+		"entry_points": {
+			"shopping": "Modules/CartConfirmationOverride/Sass/_cartconfirmationcustom-cartconfirmationoverride.scss"
+		},
+		"files": [
+			"Modules/CartConfirmationOverride/Sass/_cartconfirmationcustom-cartconfirmationoverride.scss"
+		]
+	},
+	"javascript": {
+		"entry_points": {
+			"shopping": "Modules/CartConfirmationOverride/JavaScript/OmniFunnelMarketing.CartConfirmationCustom.CartConfirmationOverride.js"
+		},
+		"application": {
+			"shopping": {
+				"files": [
+					"Modules/CartConfirmationOverride/JavaScript/OmniFunnelMarketing.CartConfirmationCustom.CartConfirmationOverride.js",
+					"Modules/CartConfirmationOverride/JavaScript/CartConfirmationOverride.View.js",
+					"Modules/CartConfirmationOverride/JavaScript/OmniFunnelMarketing.CartConfirmationCustom.CartConfirmationOverride.Model.js",
+					"Modules/CartConfirmationOverride/JavaScript/OmniFunnelMarketing.CartConfirmationCustom.CartConfirmationOverride.SS2Model.js"
+				]
+			}
+		}
+	},
+	"ssp-libraries": {
+		"entry_point": "Modules/CartConfirmationOverride/SuiteScript/OmniFunnelMarketing.CartConfirmationCustom.CartConfirmationOverride.js",
+		"files": [
+			"Modules/CartConfirmationOverride/SuiteScript/OmniFunnelMarketing.CartConfirmationCustom.CartConfirmationOverride.js",
+			"Modules/CartConfirmationOverride/SuiteScript/CartConfirmationOverride.ServiceController.js"
+		]
+	},
+	"suitescript2": {
+		"files": [
+			"Modules/CartConfirmationOverride/SuiteScript2/CartConfirmationOverride.Service.ss"
+		]
+	},
+	"path": "SuiteScripts/Deploy_Extensions/OmniFunnelMarketing/CartConfirmationCustom@1.0.0",
+	"activation_id": "5",
+	"extension_id": "11001"
+}
