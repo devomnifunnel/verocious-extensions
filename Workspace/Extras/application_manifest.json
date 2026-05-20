@@ -1,6 +1,6 @@
 {
     "type": "SCS",
-    "version": "25.2.20",
+    "version": "26.1.0",
     "application": [
         "shopping",
         "myaccount",

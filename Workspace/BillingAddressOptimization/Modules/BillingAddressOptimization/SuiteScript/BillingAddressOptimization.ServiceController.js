@@ -1,10 +1,10 @@
-define("MatrixQuickAddFix.ServiceController", ["ServiceController"], function(
+define("OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.ServiceController", ["ServiceController"], function(
   ServiceController
 ) {
   "use strict";
 
   return ServiceController.extend({
-    name: "OmniFunnelMarketing.MatrixQuickAddFix.MatrixQuickAddFix.ServiceController",
+    name: "OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.ServiceController",
 
     // The values in this object are the validation needed for the current service.
     options: {

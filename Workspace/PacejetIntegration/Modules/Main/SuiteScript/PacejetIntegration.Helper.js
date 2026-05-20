@@ -141,33 +141,53 @@ define('PacejetIntegration.Helper', [
         var productDetails = {};
         var productDetailsList = [];
 
-        _.each(items, function each(item) {
-            if (data.lines.indexOf(item.orderitemid) >= 0) {
-                productDetails = {
-                    'Quantity': {
-                        'Units': 'EA',
-                        'Value': item.quantity
-                    },
+       _.each(items, function each(item) {
+      if (data.lines.indexOf(item.orderitemid) >= 0) {
+          // SuiteCommerce normalizes checkbox values to boolean true/false
+          // (or the string equivalents). Accept either, plus the SuiteScript
+          // 'T'/'F' form just in case. Field must always be sent so the
+          // Pacejet automation EQ false condition can match for parcel items.
+          var rawLtl = item.custitemcustitem_pacejet_item_ltl;
+          var mustShipLtl = (rawLtl === true || rawLtl === 'true' || rawLtl ===
+  'T')
+              ? 'true'
+              : 'false';
+  
+          productDetails = {
+              'Quantity': {
+                  'Units': 'EA',
+                  'Value': item.quantity
+              },
 
-                    'Price': {
-                        'Amount': item.amount / item.quantity
-                    },
+              'Price': {
+                  'Amount': item.amount / item.quantity
+              },
 
-                    'Number': item.itemid,
+              'Number': item.itemid,
 
-                    'Weight': item.weight,
+              'Weight': item.weight,
 
-                    'Dimensions': {
-                        'Length': item.custitem_pacejet_item_length,
-                        'Width': item.custitem_pacejet_item_width,
-                        'Height': item.custitem_pacejet_item_height,
-                        'Units': 'IN'
-                    },
-                    'AutoPack': 'true'
-                };
-                productDetailsList.push(productDetails);
-            }
-        });
+              'Dimensions': {
+                  'Length': item.custitem_pacejet_item_length,
+                  'Width': item.custitem_pacejet_item_width,
+                  'Units': 'IN'
+              },  
+              'AutoPack': 'true',
+              'CustomFields': [{
+                  'Name': 'custitemcustitem_pacejet_item_ltl',
+                  'Value': mustShipLtl
+              }]  
+          };  
+          
+          nlapiLogExecution('error', '[DBG][LTL] item=' + item.itemid,
+              'custitemcustitem_pacejet_item_ltl raw=' +
+  item.custitemcustitem_pacejet_item_ltl
+              + ' sent=' + mustShipLtl);
+              
+          productDetailsList.push(productDetails);
+      }   
+  });
+  
 
         return {
             PackageDetailsList: [{

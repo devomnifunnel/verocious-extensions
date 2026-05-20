@@ -1,0 +1,104 @@
+{
+    "name": "BillingAddressOptimization",
+    "fantasyName": "Billing Address Optimization",
+    "vendor": "OmniFunnelMarketing",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "target_version": {
+        "SCA": ">=25.1.0",
+        "SCS": ">=25.1.0"
+    },
+    "description": "Defaults billing address to same as shipping with real-time field sync",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        },
+        "services": {
+            "files": [
+                "services/BillingAddressOptimization.Service.ss"
+            ]
+        }
+    },
+    "configuration": {
+        "files": [
+            "Modules/BillingAddressOptimization/Configuration/BillingAddressOptimization.json"
+        ]
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/BillingAddressOptimization/Sass/_billingaddressoptimization-billingaddressoptimization.scss",
+            "myaccount": "Modules/BillingAddressOptimization/Sass/_billingaddressoptimization-billingaddressoptimization.scss",
+            "checkout": "Modules/BillingAddressOptimization/Sass/_billingaddressoptimization-billingaddressoptimization.scss"
+        },
+        "files": [
+            "Modules/BillingAddressOptimization/Sass/_billingaddressoptimization-billingaddressoptimization.scss"
+        ]
+    },
+    "templates": {
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/BillingAddressOptimization/Templates/omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization.tpl"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/BillingAddressOptimization/Templates/omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization.tpl"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/BillingAddressOptimization/Templates/omnifunnelmarketing_billingaddressoptimization_billingaddressoptimization.tpl"
+                ]
+            }
+        }
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+            "myaccount": "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+            "checkout": "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+                    "Modules/BillingAddressOptimization/JavaScript/BillingAddressOptimization.View.js",
+                    "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model.js"
+                ]
+            },
+            "myaccount": {
+                "files": [
+                    "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+                    "Modules/BillingAddressOptimization/JavaScript/BillingAddressOptimization.View.js",
+                    "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model.js"
+                ]
+            },
+            "checkout": {
+                "files": [
+                    "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+                    "Modules/BillingAddressOptimization/JavaScript/BillingAddressOptimization.View.js",
+                    "Modules/BillingAddressOptimization/JavaScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.SS2Model.js"
+                ]
+            }
+        }
+    },
+    "ssp-libraries": {
+        "entry_point": "Modules/BillingAddressOptimization/SuiteScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+        "files": [
+            "Modules/BillingAddressOptimization/SuiteScript/OmniFunnelMarketing.BillingAddressOptimization.BillingAddressOptimization.js",
+            "Modules/BillingAddressOptimization/SuiteScript/BillingAddressOptimization.ServiceController.js"
+        ]
+    },
+    "local_folder": "Workspace/BillingAddressOptimization",
+    "suitescript2": {
+        "files": [
+            "Modules/BillingAddressOptimization/SuiteScript2/BillingAddressOptimization.Service.ss"
+        ]
+    }
+}

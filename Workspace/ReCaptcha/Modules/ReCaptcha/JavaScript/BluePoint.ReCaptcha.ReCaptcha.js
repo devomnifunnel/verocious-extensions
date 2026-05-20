@@ -34,6 +34,14 @@ define('BluePoint.ReCaptcha.ReCaptcha'
             // Initialize the shared loader with site key (loads NOTHING yet)
             RecaptchaLoader.initialize(siteKey);
 
+            // Load reCAPTCHA api.js immediately on page load instead of
+            // deferring until form submit. Reverts the March 10 2026
+            // deferred-loading optimization to ensure the badge is visible
+            // and Google's behavioural analysis runs before any submission,
+            // and so any UI-bypass attempts cannot benefit from a window
+            // where the script hasn't loaded yet.
+            RecaptchaLoader.load();
+
             if (LoginRegisterPage) {
                 LoginRegisterPage.addChildView('Login.Recaptcha', function () {
                     return new RecaptchaLoginView({

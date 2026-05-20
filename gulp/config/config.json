@@ -13,6 +13,7 @@
     "fetchConfig": {
         "extension": "AdvancedSignUp,BillingAddressOptimization,Blog,CanonicalFix,Columns,CookieConsent,CoreContent,CustomFields,CustomPageTitleSuffix,FeaturedCategory,FeaturedProduct,GiftCertificateValueCheck,GridOrder,HideInvoiceOption,ImageTextOverlay,InfiniteScrollExtension,InventoryDisplay,ItemBadges,ItemRecSysWidget,Klaviyo,LiveChat,LogoList,NewsletterSignUp,OrderStatus,PacejetIntegration,ProductComparison,ProductPagePrinter,QuantityUrlCleaner,ReCaptcha,ReorderSizeList,ShippingBar,SummitThemeExtension,Testimonials",
         "overwrite_ext": [
+            "Workspace/BillingAddressOptimization",
             "Workspace/CanonicalFix",
             "Workspace/CustomPageTitleSuffix",
             "Workspace/HideInvoiceOption",
@@ -22,7 +23,6 @@
             "Workspace/ReCaptcha",
             "Workspace/ReorderSizeList",
             "Workspace/AdvancedSignUp",
-            "Workspace/BillingAddressOptimization",
             "Workspace/Blog",
             "Workspace/Columns",
             "Workspace/CookieConsent",
@@ -64,6 +64,7 @@
         "extensions_dest_name": "Deploy_Extensions",
         "extmech_parent": "-15",
         "extensions_path": [
+            "Workspace/BillingAddressOptimization",
             "Workspace/CanonicalFix",
             "Workspace/CookieConsentCLSFix",
             "Workspace/CustomPageTitleSuffix",
@@ -83,7 +84,7 @@
     "application": {
         "application_manifest": {
             "type": "SCS",
-            "version": "25.2.20",
+            "version": "26.1.0",
             "application": [
                 "shopping",
                 "myaccount",
@@ -139,6 +140,8 @@
             "parentId": "-15",
             "folderName": "Deploy_Extensions"
         },
+        "script": "customscript_ext_mech_deployer_rest",
+        "deploy": "customdeploy_ext_mech_deployer_rest",
         "key": "c00dc6941fdf4506f9711b76d701747ac1d65aa8e177a4dcf67ecde1d80cee20",
         "secret": "cf565cea7e76b64649c279ad95e4001817be3483838b6700e5cd736ea5439ac5",
         "account": "606473"
